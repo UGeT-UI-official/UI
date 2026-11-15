@@ -307,28 +307,28 @@ return Theme
 
 end)()
 M.Layout = (function()
--- UGeT | responsive state (PC <-> compact/mobile)
 local Layout = {}
 local Lib
-
+local UIS = game:GetService("UserInputService")
 Layout.Compact = false
 Layout.Threshold = 640
-
+local function isCompact(vp)
+	return (vp.X < Layout.Threshold) or UIS.TouchEnabled
+end
 function Layout.Init(l)
 	Lib = l
 	Layout.Changed = l.Utility.Signal()
 	local camera = workspace.CurrentCamera
 	local function update()
-		local compact = camera.ViewportSize.X < Layout.Threshold
+		local compact = isCompact(camera.ViewportSize)
 		if compact ~= Layout.Compact then
 			Layout.Compact = compact
 			Layout.Changed:Fire(compact)
 		end
 	end
-	Layout.Compact = camera.ViewportSize.X < Layout.Threshold
+	Layout.Compact = isCompact(camera.ViewportSize)
 	Lib:Connect(camera:GetPropertyChangedSignal("ViewportSize"), update)
 end
-
 return Layout
 
 end)()
@@ -353,8 +353,8 @@ function Window.Create(Lib, cfg)
 	local isTouch = U.IsTouch
 	local w, h
 	if isTouch then
-		w = vp.X - 12
-		h = vp.Y - 70
+		w = math.min(vp.X - 24, 470)
+		h = math.min(vp.Y - 90, 560)
 	else
 		w = math.min(cfg.Width or 640, vp.X - 24)
 		h = math.min(cfg.Height or 460, vp.Y - 60)
@@ -3139,7 +3139,7 @@ function Controls.Init(l)
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
 	T.Register(dot, { BackgroundColor3 = "Accent" })
 	local label = U.New("TextLabel", { Size = UDim2.new(1, -30, 1, 0),
-		Position = UDim2.fromOffset(30, 0), BackgroundTransparency = 1, Text = "UGeT",
+		Position = UDim2.fromOffset(30, 0), BackgroundTransparency = 1, Text = "toggle",
 		TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Parent = btn })
 	T.Register(label, { TextColor3 = "Text", Font = "FontBold" })
 	local function render()

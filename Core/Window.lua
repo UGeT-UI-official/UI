@@ -18,8 +18,8 @@ function Window.Create(Lib, cfg)
 	local isTouch = U.IsTouch
 	local w, h
 	if isTouch then
-		w = vp.X - 12
-		h = vp.Y - 70
+		w = math.min(vp.X - 24, 470)
+		h = math.min(vp.Y - 90, 560)
 	else
 		w = math.min(cfg.Width or 640, vp.X - 24)
 		h = math.min(cfg.Height or 460, vp.Y - 60)

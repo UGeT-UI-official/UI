@@ -20,7 +20,7 @@ function Controls.Init(l)
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
 	T.Register(dot, { BackgroundColor3 = "Accent" })
 	local label = U.New("TextLabel", { Size = UDim2.new(1, -30, 1, 0),
-		Position = UDim2.fromOffset(30, 0), BackgroundTransparency = 1, Text = "UGeT",
+		Position = UDim2.fromOffset(30, 0), BackgroundTransparency = 1, Text = "toggle",
 		TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Parent = btn })
 	T.Register(label, { TextColor3 = "Text", Font = "FontBold" })
 	local function render()
