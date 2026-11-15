@@ -34,7 +34,7 @@ function Window.Create(Lib, cfg)
 	local bottomLine = U.New("Frame", { Size = UDim2.new(1, 0, 0, 1),
 		Position = UDim2.new(0, 0, 1, 0), BorderSizePixel = 0, Parent = topbar })
 	T.Register(bottomLine, { BackgroundColor3 = "OutlineColor" })
-	local titleHolder = U.New("Frame", { Size = UDim2.new(1, -90, 1, 0),
+	local titleHolder = U.New("Frame", { Size = UDim2.new(1, -120, 1, 0),
 		BackgroundTransparency = 1, Parent = topbar },
 		{ U.New("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal,
 			VerticalAlignment = Enum.VerticalAlignment.Center, Padding = UDim.new(0, 8) }),
@@ -48,15 +48,6 @@ function Window.Create(Lib, cfg)
 		Text = cfg.Title or "UGeT", TextSize = 14,
 		TextXAlignment = Enum.TextXAlignment.Left, Parent = titleHolder })
 	T.Register(titleLabel, { TextColor3 = "FontColor", Font = "FontBold" })
-	local searchBox = U.New("TextBox", { Size = UDim2.new(0, 0, 0, 22),
-		Position = UDim2.new(1, -110, 0.5, -11), Visible = false,
-		Text = "", PlaceholderText = "Search...", TextSize = 11,
-		TextXAlignment = Enum.TextXAlignment.Left, BorderSizePixel = 0, Parent = topbar },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
-		  U.New("UIStroke", { Thickness = 1 }),
-		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 6) }) })
-	T.Register(searchBox, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", PlaceholderColor3 = "SubText" })
-	T.Register(searchBox.UIStroke, { Color = "OutlineColor" })
 	local function topBtn(xOff, label)
 		local b = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, xOff, 0.5, 0), Size = UDim2.fromOffset(28, 28),
@@ -69,6 +60,7 @@ function Window.Create(Lib, cfg)
 	end
 	local closeBtn = topBtn(-6, "×")
 	local minBtn = topBtn(-34, "−")
+	local lockBtn = topBtn(-62, "?")
 	local sidebar = U.New("ScrollingFrame", { Size = UDim2.new(0, isTouch and 48 or 150, 1, -38),
 		Position = UDim2.fromOffset(0, 38), BorderSizePixel = 0, ScrollBarThickness = 0,
 		CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y, Parent = main },
@@ -109,7 +101,7 @@ function Window.Create(Lib, cfg)
 			{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 			  U.New("UIPadding", { PaddingLeft = UDim.new(0, 8) }) })
 		T.Register(btn, { BackgroundColor3 = "MainColor" })
-		local iconLabel = U.New("TextLabel", { Size = UDim2.fromOffset(isTouch and 32 or 22, 1, 0),
+		local iconLabel = U.New("TextLabel", { Size = UDim2.new(0, isTouch and 32 or 22, 1, 0),
 			Position = UDim2.fromOffset(isTouch and 4 or 0, 0), BackgroundTransparency = 1,
 			Text = icon or name:sub(1,1):upper(), TextSize = isTouch and 14 or 12, Parent = btn })
 		T.Register(iconLabel, { TextColor3 = "SubText", Font = "FontBold" })
@@ -133,6 +125,15 @@ function Window.Create(Lib, cfg)
 		pages.Visible = not self.Minimized
 		sideDivider.Visible = not self.Minimized
 		main.Size = self.Minimized and UDim2.new(0, main.AbsoluteSize.X, 0, 38) or self.NormalSize
+	end))
+	function self:SetLocked(v)
+		Lib.Locked = v and true or false
+		local col = Lib.Locked and T.Current.AccentColor or T.Current.SubText
+		lockBtn.TextColor3 = col
+		Lib:Notify({ Text = Lib.Locked and "UI locked" or "UI unlocked", Type = "info", Time = 2 })
+	end
+	maid:Give(lockBtn.Activated:Connect(function()
+		self:SetLocked(not Lib.Locked)
 	end))
 	local armed = false
 	maid:Give(closeBtn.Activated:Connect(function()
@@ -165,6 +166,7 @@ function Window.Create(Lib, cfg)
 	gripLine(7, UDim2.new(1, -6, 1, -6))
 	local resizing, startSize, startInput = false, nil, nil
 	maid:Give(grip.InputBegan:Connect(function(input)
+		if Lib.Locked then return end
 		if input.UserInputType == Enum.UserInputType.MouseButton1
 			or input.UserInputType == Enum.UserInputType.Touch then
 			resizing = true startSize = main.AbsoluteSize startInput = input.Position
@@ -175,7 +177,7 @@ function Window.Create(Lib, cfg)
 			or input.UserInputType == Enum.UserInputType.Touch then resizing = false end
 	end))
 	maid:Give(UIS.InputChanged:Connect(function(input)
-		if not resizing then return end
+		if not resizing or Lib.Locked then return end
 		if input.UserInputType ~= Enum.UserInputType.MouseMovement
 			and input.UserInputType ~= Enum.UserInputType.Touch then return end
 		local v = ugetViewport()
