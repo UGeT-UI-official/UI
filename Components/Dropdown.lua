@@ -127,8 +127,8 @@ function Dropdown.Create(Lib, section, flagName, cfg)
 		local count = 0
 		for _, val in ipairs(resolveValues()) do
 			local s = tostring(val)
-			if filter ~= "" and not s:lower():find(filter, 1, true) then continue end
-			count += 1
+			if filter == "" or s:lower():find(filter, 1, true) then
+			count = count + 1
 			local selected = flag.Multi and flag.Value[val] or flag.Value == val
 			local item = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 26), Text = "",
 				AutoButtonColor = false, BackgroundTransparency = 1, Parent = list },
@@ -164,6 +164,7 @@ function Dropdown.Create(Lib, section, flagName, cfg)
 					setOpen(false)
 				end
 			end)
+			end
 		end
 		listHeight = math.min(math.max(count, 1), 7) * 26 + 2
 		list.Size = UDim2.new(1, 0, 0, listHeight)

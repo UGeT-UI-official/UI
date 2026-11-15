@@ -1,5 +1,6 @@
 -- UGeT UI | window: sidebar layout, drag, resize, minimize, status bar
 local Window = {}
+local UIS = game:GetService("UserInputService")
 
 function Window.Create(Lib, cfg)
 	local U = Lib.Utility
@@ -110,7 +111,7 @@ function Window.Create(Lib, cfg)
 
 	local fpsAcc, fpsFrames, timer = 0, 0, 0
 	maid:Give(game:GetService("RunService").Heartbeat:Connect(function(dt)
-		fpsAcc += dt fpsFrames += 1 timer += dt
+		fpsAcc = fpsAcc + dt; fpsFrames = fpsFrames + 1; timer = timer + dt
 		if timer >= 0.5 then
 			local fps = math.floor(fpsFrames / math.max(fpsAcc, 1e-9) + 0.5)
 			statusRight.Text = fps .. " fps  •  " .. (self.ActiveTab and self.ActiveTab.Name or "")
@@ -271,5 +272,4 @@ function Window.Create(Lib, cfg)
 	return self
 end
 
-local UIS = game:GetService("UserInputService")
 return Window

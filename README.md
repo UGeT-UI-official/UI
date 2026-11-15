@@ -1,7 +1,7 @@
 # UGeT UI
 
 Obsidianの設計思想を研究した上で、ゼロから設計・実装した**完全オリジナルのRoblox Luau UIライブラリ**。
-by **FOX & Wase**
+by **UGeT UI**
 
 ## 特徴
 - 左サイドバー型レイアウト（狭い画面では自動でアイコンレール＋1カラム化）
@@ -87,4 +87,4 @@ git push -u origin main
 ```
 
 ## License
-MIT — Copyright (c) 2026 FOX & Wase
+MIT — Copyright (c) 2026 UGeT UI

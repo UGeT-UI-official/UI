@@ -1,3 +1,7 @@
+-- compat: Luau table helpers (no-op on Roblox)
+if not table.clear then function table.clear(t) for k in pairs(t) do t[k] = nil end end end
+if not table.clone then function table.clone(t) local c = {} for k, v in pairs(t) do c[k] = v end return c end end
+if not table.find then function table.find(t, v) for i, x in ipairs(t) do if x == v then return i end end return nil end end
 -- UGeT UI | pure helpers, zero dependencies on other modules
 local Utility = {}
 

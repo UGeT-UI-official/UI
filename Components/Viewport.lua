@@ -59,7 +59,7 @@ function Viewport.Build(Lib, parent, cfg)
 
 	Lib:Connect(RunService.RenderStepped, function(dt)
 		if obj.Spin and model then
-			obj.Yaw += dt * 30
+			obj.Yaw = obj.Yaw + (dt * 30)
 			obj:UpdateCamera()
 		end
 	end)

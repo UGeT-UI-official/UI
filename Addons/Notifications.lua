@@ -17,7 +17,7 @@ function Notifications.Init(Lib)
 
 		local frames = 0
 		for _, c in ipairs(container:GetChildren()) do
-			if c:IsA("Frame") then frames += 1 end
+			if c:IsA("Frame") then frames = frames + (1) end
 		end
 		if frames >= 6 then
 			for _, c in ipairs(container:GetChildren()) do

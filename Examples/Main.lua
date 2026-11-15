@@ -3,7 +3,7 @@ local Library = require(game:GetService("ReplicatedStorage"):WaitForChild("UGeT-
 
 local Window = Library:CreateWindow({
 	Title = "UGeT UI",
-	Subtitle = "by FOX & Wase",
+	Subtitle = "v1.0.0",
 	Width = 660, Height = 480,
 })
 
@@ -65,9 +65,9 @@ three:AddViewport({ Model = part, Height = 160, Spin = true })
 local WebTab = Window:AddTab("Web", "W")
 local site = WebTab:AddSection("UGeT Site")
 site:AddWebLink({
-	Title = "UGeT — Roblox Asset Hub",
-	Url = "https://your-uget-site.example",
-	Description = "Termuxサーバー + GitHub Pages。URLは自分のUGeTサイトに書き換えてください。",
+	Title = "UGeT UI",
+	Url = "https://github.com/WaseranYaro8/UGeT-UI",
+	Description = "UGeT UI - Roblox Luau UI library",
 })
 local bridge = WebTab:AddSection("HTTP Bridge", "Right")
 bridge:AddInput("uget_api_url", { Text = "API URL", Placeholder = "https://.../api/...", Finished = true })
