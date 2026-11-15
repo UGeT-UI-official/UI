@@ -66,7 +66,7 @@ local WebTab = Window:AddTab("Web", "W")
 local site = WebTab:AddSection("UGeT Site")
 site:AddWebLink({
 	Title = "UGeT",
-	Url = "https://github.com/UGeT-UI/UGeT-UI",
+	Url = "https://github.com/UGeT/UI",
 	Description = "UGeT - Roblox Luau UI library",
 })
 local bridge = WebTab:AddSection("HTTP Bridge", "Right")

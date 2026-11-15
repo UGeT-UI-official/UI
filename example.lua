@@ -1,6 +1,6 @@
 -- UGeT example | suppress the built-in demo, then build a small working UI
 if getgenv then getgenv().UGET_NO_DEMO = true end
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UGeT-UI/UGeT-UI/main/UGeT.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UGeT/UI/main/UGeT.lua"))()
 
 local Window = Library:CreateWindow({ Title = "UGeT", Subtitle = "example" })
 local Main = Window:AddTab("Main")

@@ -7,7 +7,7 @@ Roblox用の自作UIライブラリ。バージョンは **v1.0.0** で固定。
 これ1行でいい:
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/UGeT-UI/UGeT-UI/main/UGeT.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/UGeT/UI/main/UGeT.lua"))()
 ```
 
 `UGeT.lua` は全部入りビルド。Core / Components / Addons を1ファイルにまとめてある。
@@ -42,7 +42,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/UGeT-UI/UGeT-UI/main/
 ## 使い方
 
 ```lua
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UGeT-UI/UGeT-UI/main/UGeT.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UGeT/UI/main/UGeT.lua"))()
 local Window = Library:CreateWindow({ Title = "UGeT" })
 local Tab = Window:AddTab("Main")
 Tab:AddButton("Hello", function() print("UGeT") end)
