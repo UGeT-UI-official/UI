@@ -1,5 +1,5 @@
 -- UGeT | Loader: one loadstring loads the whole library + a full demo window.
-local BASE = "https://raw.githubusercontent.com/WaseranYaro8/UGeT-UI/main/"
+local BASE = "https://raw.githubusercontent.com/UGeT-UI/UGeT-UI/main/"
 local function get(p)
 	local ok, src = pcall(function() return game:HttpGet(BASE .. p .. "?v=" .. tostring(os.time())) end)
 	if not ok then error("[UGeT] fetch failed: " .. p) end
