@@ -33,6 +33,7 @@ Library.Use({
 	SaveManager = get("Addons/SaveManager.lua"),
 	Guide = get("Addons/Guide.lua"),
 	Controls = get("Addons/Controls.lua"),
+	Enhance = get("Core/Enhance.lua"),
 })
 Library.Init()
 
@@ -58,6 +59,7 @@ Media:AddSection("Video", "Right"):AddVideo({ Video = "rbxassetid://0", Height =
 
 local Settings = Window:AddTab("Settings", "S")
 Library.ThemeManager.BuildSection(Settings:AddSection("Theme"))
+Library.Enhance.BuildSettings(Settings:AddSection("Controls"))
 Library.SaveManager:SetFolder("UGeT-UI")
 Library.SaveManager:BuildSection(Settings:AddSection("Config", "Right"))
 local sys = Settings:AddSection("System", "Right")

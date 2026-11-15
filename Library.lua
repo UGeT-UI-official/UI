@@ -1,6 +1,6 @@
 -- UGeT UI | original Roblox Luau UI library (plain-Lua compatible)
 local Library = {
-	Version = "1.1.0",
+	Version = "1.2.0",
 	Name = "UGeT UI",
 	Flags = {},
 	Windows = {},
@@ -9,6 +9,7 @@ local Library = {
 	Capturing = nil,
 	Unloaded = false,
 	Locked = false,
+	NotificationsEnabled = true,
 	_Init = false,
 	_Modules = nil,
 	_OnDestroy = {},
@@ -65,6 +66,7 @@ function Library.Init()
 	if M.MusicPlayer then M.MusicPlayer.Init(Library) end
 	if M.Animator3D then M.Animator3D.Init(Library) end
 	if M.Guide then M.Guide.Init(Library) end
+	if M.Enhance then M.Enhance.Init(Library) end
 
 	Library:Connect(UIS.InputBegan, function(input, gpe)
 		if Library.Capturing then
@@ -176,6 +178,7 @@ if ok and isTree then
 		SaveManager = require(script.Addons.SaveManager),
 		Guide = require(script.Addons.Guide),
 		Controls = require(script.Addons.Controls),
+		Enhance = require(script.Core.Enhance),
 	})
 	Library.Init()
 end

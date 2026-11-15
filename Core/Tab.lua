@@ -1,14 +1,12 @@
--- UGeT UI | tab page, sections (cards), component proxies
+-- UGeT UI | tab page + collapsible sections + section/tab enable
 local Tab = {}
-
 local COMPONENT_METHODS = {
 	Button = "AddButton", Toggle = "AddToggle", Slider = "AddSlider",
 	Dropdown = "AddDropdown", Input = "AddInput", ColorPicker = "AddColorPicker",
 	Keybind = "AddKeybind", Asset = "AddAsset", Video = "AddVideo",
 	Viewport = "AddViewport", Web = "AddWebLink",
 }
-
-local function buildSection(Lib, column, title)
+local function buildSection(Lib, column, title, tab)
 	local U, T = Lib.Utility, Lib.Theme
 	local card = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BorderSizePixel = 0, Parent = column },
@@ -16,33 +14,53 @@ local function buildSection(Lib, column, title)
 		  U.New("UIStroke", { Thickness = 1 }) })
 	T.Register(card, { BackgroundColor3 = "Card" })
 	T.Register(card.UIStroke, { Color = "StrokeSoft" })
-
-	local head = U.New("Frame", { Size = UDim2.new(1, 0, 0, 32),
-		BackgroundTransparency = 1, Parent = card })
+	local head = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 34), Text = "",
+		AutoButtonColor = false, BackgroundTransparency = 1, Parent = card })
 	local tick = U.New("Frame", { Size = UDim2.fromOffset(3, 14),
 		Position = UDim2.new(0, 12, 0.5, -7), BorderSizePixel = 0, Parent = head },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
 	T.Register(tick, { BackgroundColor3 = "Accent" })
-	local titleLabel = U.New("TextLabel", { Size = UDim2.new(1, -28, 1, 0),
+	local titleLabel = U.New("TextLabel", { Size = UDim2.new(1, -52, 1, 0),
 		Position = UDim2.fromOffset(24, 0), BackgroundTransparency = 1, Text = title,
 		TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Parent = head })
 	T.Register(titleLabel, { TextColor3 = "Text", Font = "FontBold" })
-
+	local chev = U.New("Frame", { AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, -12, 0.5, 0), Size = UDim2.fromOffset(14, 14),
+		BackgroundTransparency = 1, Rotation = 0, Parent = head })
+	local function cline(x, rot)
+		local f = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
+			Size = UDim2.fromOffset(7, 1.6), Position = UDim2.fromScale(x, 0.5),
+			Rotation = rot, BorderSizePixel = 0, Parent = chev },
+			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
+		T.Register(f, { BackgroundColor3 = "SubText" })
+	end
+	cline(0.3, 45) cline(0.7, -45)
 	local body = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = card }, {
 		U.New("UIPadding", { PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12),
 			PaddingBottom = UDim.new(0, 12) }),
 		U.New("UIListLayout", { Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }),
 	})
-
-	local section = { Frame = card, Body = body, Title = title }
-
+	local section = { Frame = card, Body = body, Title = title, Header = head,
+		Tab = tab, Flags = {}, Collapsed = false }
+	function section:SetCollapsed(v)
+		self.Collapsed = v and true or false
+		body.Visible = not self.Collapsed
+		U.Tween(chev, 0.18, { Rotation = self.Collapsed and -90 or 0 })
+	end
+	Lib:Connect(head.Activated, function() section:SetCollapsed(not section.Collapsed) end)
+	Lib:Connect(head.MouseEnter, function() U.Tween(card.UIStroke, 0.12, { Color = T.Current.Stroke }) end)
+	Lib:Connect(head.MouseLeave, function() U.Tween(card.UIStroke, 0.12, { Color = T.Current.StrokeSoft }) end)
+	function section:SetEnabled(v)
+		for _, f in ipairs(self.Flags) do
+			if f.SetEnabled then f:SetEnabled(v) end
+		end
+	end
 	for comp, method in pairs(COMPONENT_METHODS) do
 		section[method] = function(s, ...)
 			return Lib.Components[comp].Create(Lib, s, ...)
 		end
 	end
-
 	function section:AddLabel(text, wrapped)
 		local l = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, wrapped and 0 or 18),
 			AutomaticSize = wrapped and Enum.AutomaticSize.Y or Enum.AutomaticSize.None,
@@ -51,7 +69,6 @@ local function buildSection(Lib, column, title)
 		T.Register(l, { TextColor3 = "SubText", Font = "Font" })
 		return { Instance = l, SetText = function(_, t) l.Text = t end }
 	end
-
 	function section:AddParagraph(heading, text)
 		local h = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 16), BackgroundTransparency = 1,
 			Text = heading, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = body })
@@ -62,7 +79,6 @@ local function buildSection(Lib, column, title)
 		T.Register(p, { TextColor3 = "SubText", Font = "Font" })
 		return { SetText = function(_, t) p.Text = t end }
 	end
-
 	function section:AddDivider()
 		local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, 5),
 			BackgroundTransparency = 1, Parent = body })
@@ -70,14 +86,11 @@ local function buildSection(Lib, column, title)
 			Position = UDim2.new(0, 0, 0.5, 0), BorderSizePixel = 0, Parent = row })
 		T.Register(l, { BackgroundColor3 = "StrokeSoft" })
 	end
-
 	return section
 end
-
 function Tab.Create(Lib, window, name)
 	local U, T = Lib.Utility, Lib.Theme
 	local self = { Name = name, Window = window, Sections = {} }
-
 	local page = U.New("ScrollingFrame", { Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 3,
 		CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
@@ -87,13 +100,11 @@ function Tab.Create(Lib, window, name)
 			PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10) }) })
 	T.Register(page, { ScrollBarImageColor3 = "Accent" })
 	self.Page = page
-
 	local holder = U.New("Frame", { Size = UDim2.new(1, -6, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = page },
 		{ U.New("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal,
 			Padding = UDim.new(0, 10), SortOrder = Enum.SortOrder.LayoutOrder }) })
 	self.Holder = holder
-
 	local function column(order)
 		return U.New("Frame", { Size = UDim2.new(0.5, -5, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1,
@@ -102,7 +113,6 @@ function Tab.Create(Lib, window, name)
 	end
 	self.Left = column(1)
 	self.Right = column(2)
-
 	function self:ApplyLayout(compact)
 		holder.UIListLayout.FillDirection = compact
 			and Enum.FillDirection.Vertical or Enum.FillDirection.Horizontal
@@ -110,21 +120,19 @@ function Tab.Create(Lib, window, name)
 		self.Left.Size = size
 		self.Right.Size = size
 	end
-
 	function self:AddSection(title, side)
 		local col = (side == "Right") and self.Right or self.Left
-		local section = buildSection(Lib, col, title or "Section")
+		local section = buildSection(Lib, col, title or "Section", self)
 		table.insert(self.Sections, section)
 		return section
 	end
-
+	function self:SetEnabled(v)
+		for _, s in ipairs(self.Sections) do s:SetEnabled(v) end
+	end
 	function self:GetDefaultSection()
-		if not self._default then
-			self._default = self:AddSection("General", "Left")
-		end
+		if not self._default then self._default = self:AddSection("General", "Left") end
 		return self._default
 	end
-
 	for _, method in pairs(COMPONENT_METHODS) do
 		self[method] = function(s, ...)
 			local def = s:GetDefaultSection()
@@ -134,8 +142,6 @@ function Tab.Create(Lib, window, name)
 	function self:AddLabel(...) return self:GetDefaultSection():AddLabel(...) end
 	function self:AddParagraph(...) return self:GetDefaultSection():AddParagraph(...) end
 	function self:AddDivider() return self:GetDefaultSection():AddDivider() end
-
 	return self
 end
-
 return Tab

@@ -11,6 +11,7 @@ function Notifications.Init(Lib)
 			VerticalAlignment = Enum.VerticalAlignment.Top }) })
 
 	function Lib:Notify(data, duration)
+		if Lib.NotificationsEnabled == false then return end
 		if type(data) ~= "table" then data = { Text = tostring(data), Time = duration } end
 		duration = data.Time or 4
 		local tone = ({ success = "Success", warn = "Warning", error = "Danger", info = "Info" })[data.Type or ""] or "Accent"
