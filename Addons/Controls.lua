@@ -8,7 +8,8 @@ function Controls.Init(l)
 	local U, T = Lib.Utility, Lib.Theme
 
 	local btn = U.New("TextButton", { Name = "UGeT_Toggle",
-		Position = UDim2.fromOffset(12, 12), Size = UDim2.fromOffset(88, 36),
+		Position = U.IsTouch and UDim2.new(1, -112, 1, -60) or UDim2.fromOffset(12, 12),
+		Size = U.IsTouch and UDim2.fromOffset(100, 46) or UDim2.fromOffset(88, 36),
 		Text = "", AutoButtonColor = false, BorderSizePixel = 0, ZIndex = 60,
 		Parent = Lib.ScreenGui },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),

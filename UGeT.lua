@@ -346,8 +346,15 @@ function Window.Create(Lib, cfg)
 	self._maid = maid
 
 	local vp = ugetViewport()
-	local w = math.min(cfg.Width or 640, vp.X - 24)
-	local h = math.min(cfg.Height or 460, vp.Y - 60)
+	local isTouch = U.IsTouch
+	local w, h
+	if isTouch then
+		w = vp.X - 12
+		h = vp.Y - 70
+	else
+		w = math.min(cfg.Width or 640, vp.X - 24)
+		h = math.min(cfg.Height or 460, vp.Y - 60)
+	end
 	self.NormalSize = UDim2.fromOffset(w, h)
 
 	local main = U.New("Frame", {
@@ -496,7 +503,7 @@ function Window.Create(Lib, cfg)
 
 	function self:AddTab(name, icon)
 		local tab = Lib.Tab.Create(Lib, self, name)
-		local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 34), Text = "",
+		local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, isTouch and 44 or 34), Text = "",
 			AutoButtonColor = false, BackgroundTransparency = 1, BorderSizePixel = 0,
 			Parent = sidebar }, { U.New("UICorner", { CornerRadius = UDim.new(0, 8) }) })
 		T.Register(btn, { BackgroundColor3 = "Card" })
@@ -505,7 +512,7 @@ function Window.Create(Lib, cfg)
 			BorderSizePixel = 0, Parent = btn },
 			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
 		T.Register(bar, { BackgroundColor3 = "Accent" })
-		local iconLabel = U.New("TextLabel", { Size = UDim2.fromOffset(28, 34),
+		local iconLabel = U.New("TextLabel", { Size = UDim2.new(0, 28, 1, 0),
 			Position = UDim2.fromOffset(6, 0), BackgroundTransparency = 1,
 			Text = icon or name:sub(1, 1):upper(), TextSize = 14, Parent = btn })
 		T.Register(iconLabel, { TextColor3 = "SubText", Font = "FontBold" })
@@ -561,7 +568,7 @@ function Window.Create(Lib, cfg)
 	end, true)
 
 	local grip = U.New("TextButton", { AnchorPoint = Vector2.new(1, 1),
-		Position = UDim2.new(1, -3, 1, -3), Size = UDim2.fromOffset(20, 20),
+		Position = UDim2.new(1, -3, 1, -3), Size = UDim2.fromOffset(isTouch and 30 or 20, isTouch and 30 or 20),
 		Text = "", BackgroundTransparency = 1, AutoButtonColor = false, ZIndex = 5, Parent = main })
 	line(grip, 6, 1.4, UDim2.new(1, -5, 1, -5), -45)
 	line(grip, 11, 1.4, UDim2.new(1, -7, 1, -7), -45)
@@ -584,8 +591,8 @@ function Window.Create(Lib, cfg)
 		local v = ugetViewport()
 		local d = input.Position - startInput
 		main.Size = UDim2.fromOffset(
-			math.clamp(startSize.X + d.X, 420, v.X - 16),
-			math.clamp(startSize.Y + d.Y, 300, v.Y - 16))
+			math.clamp(startSize.X + d.X, isTouch and 280 or 420, v.X - 16),
+			math.clamp(startSize.Y + d.Y, isTouch and 240 or 300, v.Y - 16))
 		self.NormalSize = main.Size
 		self.Minimized = false
 		sidebar.Visible = true pages.Visible = true status.Visible = true
@@ -3142,7 +3149,8 @@ function Controls.Init(l)
 	local U, T = Lib.Utility, Lib.Theme
 
 	local btn = U.New("TextButton", { Name = "UGeT_Toggle",
-		Position = UDim2.fromOffset(12, 12), Size = UDim2.fromOffset(88, 36),
+		Position = U.IsTouch and UDim2.new(1, -112, 1, -60) or UDim2.fromOffset(12, 12),
+		Size = U.IsTouch and UDim2.fromOffset(100, 46) or UDim2.fromOffset(88, 36),
 		Text = "", AutoButtonColor = false, BorderSizePixel = 0, ZIndex = 60,
 		Parent = Lib.ScreenGui },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
