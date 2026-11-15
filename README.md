@@ -28,7 +28,7 @@ end)
 
 ## セットアップ（Executor / ブートストラップ）
 ```lua
-local BASE = "https://raw.githubusercontent.com/<YOUR_NAME>/UGeT-UI/main/"
+local BASE = "https://raw.githubusercontent.com/WaseranYaro8/UGeT-UI/main/"
 local function get(p) return loadstring(game:HttpGet(BASE .. p))() end
 local Library = get("Library.lua")
 Library.Use({
@@ -82,7 +82,7 @@ Library.Init()
 cd UGeT-UI
 git init && git add . && git commit -m "UGeT UI v1.0.0"
 git branch -M main
-git remote add origin https://github.com/<YOUR_NAME>/UGeT-UI.git
+git remote add origin https://github.com/WaseranYaro8/UGeT-UI.git
 git push -u origin main
 ```
 
