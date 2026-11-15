@@ -1,4 +1,4 @@
--- UGeT UI | Notifications: top-right toasts
+-- UGeT | Notifications: top-right toasts
 local Notifications = {}
 
 function Notifications.Init(Lib)

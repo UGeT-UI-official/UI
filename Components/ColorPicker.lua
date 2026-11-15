@@ -1,4 +1,4 @@
--- UGeT UI | ColorPicker: inline HSV panel + hex + optional alpha
+-- UGeT | ColorPicker: inline HSV panel + hex + optional alpha
 local ColorPicker = {}
 
 function ColorPicker.Create(Lib, section, flagName, cfg)

@@ -1,4 +1,4 @@
--- UGeT UI | Video: VideoFrame with controls
+-- UGeT | Video: VideoFrame with controls
 local Video = {}
 
 function Video.Create(Lib, section, cfg)

@@ -1,4 +1,4 @@
--- UGeT UI | Asset: paste any asset id -> auto preview (image/audio/video/model) + copy
+-- UGeT | Asset: paste any asset id -> auto preview (image/audio/video/model) + copy
 local Asset = {}
 local MarketplaceService = game:GetService("MarketplaceService")
 local SoundService = game:GetService("SoundService")

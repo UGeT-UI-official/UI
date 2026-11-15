@@ -1,4 +1,4 @@
--- UGeT UI | WebLink: site card, copy URL, optional connectivity ping (UGeT bridge)
+-- UGeT | WebLink: site card, copy URL, optional connectivity ping (UGeT bridge)
 local Web = {}
 
 function Web.Create(Lib, section, cfg)

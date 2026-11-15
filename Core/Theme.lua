@@ -1,4 +1,4 @@
--- UGeT UI | theme tokens + presets
+-- UGeT | theme tokens + presets
 local Theme = {}
 local Lib
 Theme.Current = {

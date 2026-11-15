@@ -1,4 +1,4 @@
--- UGeT UI | Guide: built-in documentation tab
+-- UGeT | Guide: built-in documentation tab
 local Guide = {}
 local Lib
 
@@ -34,12 +34,12 @@ end
 
 function Guide.BuildTab(tab)
 	local start = tab:AddSection("Getting started")
-	start:AddParagraph("UGeT UI",
+	start:AddParagraph("UGeT",
 		"An original Roblox Luau UI library. Sidebar layout, inline dropdowns, " ..
 		"music bar, 3D animator, themes and config. Works on PC and mobile.")
 	start:AddLabel("Everything below is a live, working example.", true)
 	start:AddButton({ Text = "Show a notification", Variant = "Accent", Func = function()
-		Lib:Notify({ Title = "UGeT UI", Text = "This is a notification", Type = "success" })
+		Lib:Notify({ Title = "UGeT", Text = "This is a notification", Type = "success" })
 	end })
 	start:AddToggle("guide_demo_toggle", { Text = "Example toggle", Default = false })
 	start:AddSlider("guide_demo_slider", { Text = "Example slider", Min = 0, Max = 100, Default = 50 })

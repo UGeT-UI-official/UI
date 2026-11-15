@@ -1,4 +1,4 @@
--- UGeT UI | ThemeManager: presets + live customization section
+-- UGeT | ThemeManager: presets + live customization section
 local ThemeManager = {}
 local Lib
 

@@ -1,4 +1,4 @@
--- UGeT UI | Controls: polished floating show/hide button
+-- UGeT | Controls: polished floating show/hide button
 local Controls = {}
 local Lib
 

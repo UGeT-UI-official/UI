@@ -1,4 +1,4 @@
--- UGeT UI | Animator3D: keyframe 3D animation editor inside a tab
+-- UGeT | Animator3D: keyframe 3D animation editor inside a tab
 local Animator3D = {}
 local RunService = game:GetService("RunService")
 local InsertService = game:GetService("InsertService")

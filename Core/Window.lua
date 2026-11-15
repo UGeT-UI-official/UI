@@ -1,6 +1,11 @@
--- UGeT UI | window: sidebar layout, drag, resize, minimize, pin/lock, status bar
+-- UGeT | window: sidebar layout, drag, resize, minimize, pin/lock, status bar
 local Window = {}
 local UIS = game:GetService("UserInputService")
+
+local function ugetViewport()
+	local c = workspace.CurrentCamera
+	return c and c.ViewportSize or Vector2.new(1280,720)
+end
 
 function Window.Create(Lib, cfg)
 	local U = Lib.Utility
@@ -9,7 +14,7 @@ function Window.Create(Lib, cfg)
 	local maid = U.Maid()
 	self._maid = maid
 
-	local vp = workspace.CurrentCamera.ViewportSize
+	local vp = ugetViewport()
 	local w = math.min(cfg.Width or 640, vp.X - 24)
 	local h = math.min(cfg.Height or 460, vp.Y - 60)
 	self.NormalSize = UDim2.fromOffset(w, h)
@@ -38,7 +43,7 @@ function Window.Create(Lib, cfg)
 	T.Register(logo, { BackgroundColor3 = "Accent" })
 	local title = U.New("TextLabel", { Size = UDim2.new(1, -190, 0, 20),
 		Position = UDim2.fromOffset(32, 6), BackgroundTransparency = 1,
-		Text = cfg.Title or "UGeT UI", TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left,
+		Text = cfg.Title or "UGeT", TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = header })
 	T.Register(title, { TextColor3 = "Text", Font = "FontBold" })
 	local subtitle = U.New("TextLabel", { Size = UDim2.new(1, -190, 0, 14),
@@ -210,12 +215,12 @@ function Window.Create(Lib, cfg)
 	maid:Give(closeBtn.Activated:Connect(function()
 		if armed then Lib:Destroy() return end
 		armed = true
-		Lib:Notify({ Title = "UGeT UI", Text = "Press X again to close", Type = "warn", Time = 3 })
+		Lib:Notify({ Title = "UGeT", Text = "Press X again to close", Type = "warn", Time = 3 })
 		task.delay(3, function() armed = false end)
 	end))
 
 	U.Draggable(Lib, main, header, function()
-		local v = workspace.CurrentCamera.ViewportSize
+		local v = ugetViewport()
 		local half = main.AbsoluteSize / 2
 		local p = main.Position
 		main.Position = UDim2.new(p.X.Scale,
@@ -245,7 +250,7 @@ function Window.Create(Lib, cfg)
 		if not resizing or Lib.Locked then return end
 		if input.UserInputType ~= Enum.UserInputType.MouseMovement
 			and input.UserInputType ~= Enum.UserInputType.Touch then return end
-		local v = workspace.CurrentCamera.ViewportSize
+		local v = ugetViewport()
 		local d = input.Position - startInput
 		main.Size = UDim2.fromOffset(
 			math.clamp(startSize.X + d.X, 420, v.X - 16),

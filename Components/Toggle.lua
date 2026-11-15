@@ -1,4 +1,4 @@
--- UGeT UI | Toggle: sliding pill switch. (flag, cfg) or (flag, default, fn)
+-- UGeT | Toggle: sliding pill switch. (flag, cfg) or (flag, default, fn)
 local Toggle = {}
 
 function Toggle.Create(Lib, section, flagName, cfgOrBool, fn)

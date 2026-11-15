@@ -1,4 +1,4 @@
--- UGeT UI | responsive state (PC <-> compact/mobile)
+-- UGeT | responsive state (PC <-> compact/mobile)
 local Layout = {}
 local Lib
 

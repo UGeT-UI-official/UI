@@ -1,8 +1,8 @@
--- UGeT UI demo | Studio: Script として実行 (UGeT-UI フォルダは ReplicatedStorage に置く)
+-- UGeT demo | Studio: Script として実行 (UGeT-UI フォルダは ReplicatedStorage に置く)
 local Library = require(game:GetService("ReplicatedStorage"):WaitForChild("UGeT-UI").Library)
 
 local Window = Library:CreateWindow({
-	Title = "UGeT UI",
+	Title = "UGeT",
 	Subtitle = "v1.0.0",
 	Width = 660, Height = 480,
 })
@@ -11,8 +11,8 @@ local Window = Library:CreateWindow({
 local Main = Window:AddTab("Main", "M")
 
 Main:AddButton("Test Button", function()
-	print("UGeT UI")
-	Library:Notify({ Title = "Button", Text = "UGeT UI 動作中", Type = "success" })
+	print("UGeT")
+	Library:Notify({ Title = "Button", Text = "UGeT 動作中", Type = "success" })
 end)
 Main:AddButton({ Text = "Accent Button", Variant = "Accent", Func = function()
 	Library:Notify({ Text = "Accent!", Type = "info" })
@@ -65,9 +65,9 @@ three:AddViewport({ Model = part, Height = 160, Spin = true })
 local WebTab = Window:AddTab("Web", "W")
 local site = WebTab:AddSection("UGeT Site")
 site:AddWebLink({
-	Title = "UGeT UI",
+	Title = "UGeT",
 	Url = "https://github.com/WaseranYaro8/UGeT-UI",
-	Description = "UGeT UI - Roblox Luau UI library",
+	Description = "UGeT - Roblox Luau UI library",
 })
 local bridge = WebTab:AddSection("HTTP Bridge", "Right")
 bridge:AddInput("uget_api_url", { Text = "API URL", Placeholder = "https://.../api/...", Finished = true })
@@ -93,9 +93,9 @@ Library.Flags.uget_menu_key.OnChanged:Connect(function()
 	local k = Library.Flags.uget_menu_key.Value
 	if k ~= "None" then Library:SetToggleKey(k) end
 end)
-sys:AddButton({ Text = "Unload UGeT UI", Variant = "Danger", DoubleClick = true, Func = function()
+sys:AddButton({ Text = "Unload UGeT", Variant = "Danger", DoubleClick = true, Func = function()
 	Library:Destroy()
 end })
 
 Library.SaveManager:LoadAutoload()
-Library:Notify({ Title = "UGeT UI", Text = "ロード完了 — RightControlで開閉", Type = "success", Time = 5 })
+Library:Notify({ Title = "UGeT", Text = "ロード完了 — RightControlで開閉", Type = "success", Time = 5 })

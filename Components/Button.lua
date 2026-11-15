@@ -1,4 +1,4 @@
--- UGeT UI | Button: (text, fn) or ({Text, Func, Variant, DoubleClick})
+-- UGeT | Button: (text, fn) or ({Text, Func, Variant, DoubleClick})
 local Button = {}
 
 function Button.Create(Lib, section, textOrCfg, fn)

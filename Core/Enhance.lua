@@ -1,14 +1,11 @@
--- UGeT UI | Enhance: per-control enable/disable, dependencies, reset, tooltips,
--- global search, keybind panel, control manager. Wraps every component.
+-- UGeT | Enhance: per-control enable/disable, dependencies, reset, tooltips,
+-- global search, keybind panel, control manager
 local Enhance = {}
-local Lib
-local U, T
+local Lib, U, T
 local tooltipLabel
-local elements = {}
-local deps = {}
+local elements, deps = {}, {}
 
 local function rowOf(flag) return flag.Instance end
-
 local function makeBlocker(flag)
 	local row = rowOf(flag)
 	if not row then return nil end
@@ -24,13 +21,10 @@ end
 function Enhance.Attach(flag, section, cfg)
 	if type(flag) ~= "table" or not flag.Type or flag.Type == "Button" then return flag end
 	cfg = cfg or {}
-	flag.Enabled = true
-	flag.Default = cfg.Default
-	flag.Section = section
+	flag.Enabled, flag.Default, flag.Section = true, cfg.Default, section
 	flag.Tab = section and section.Tab or nil
 	local blocker = makeBlocker(flag)
 	flag.OnEnabledChanged = U.Signal()
-
 	function flag:SetEnabled(v)
 		self.Enabled = v and true or false
 		if blocker then blocker.Visible = not self.Enabled end
@@ -44,7 +38,6 @@ function Enhance.Attach(flag, section, cfg)
 		Enhance.RefreshDeps()
 		return self
 	end
-
 	if flag.SetValue then
 		local baseSet = flag.SetValue
 		flag.SetValue = function(self, v, ...)
@@ -52,9 +45,7 @@ function Enhance.Attach(flag, section, cfg)
 			return baseSet(self, v, ...)
 		end
 	end
-
-	local baseSer = flag.Serialize
-	local baseDeser = flag.Deserialize
+	local baseSer, baseDeser = flag.Serialize, flag.Deserialize
 	flag.Serialize = function(self)
 		local v
 		if baseSer then v = baseSer(self) else v = self.Value end
@@ -62,36 +53,26 @@ function Enhance.Attach(flag, section, cfg)
 	end
 	flag.Deserialize = function(self, data)
 		local target = true
-		if type(data) == "table" and data.__enh then
-			target = data.e ~= false
-			data = data.v
-		end
+		if type(data) == "table" and data.__enh then target = data.e ~= false data = data.v end
 		self.Enabled = true
-		if baseDeser then baseDeser(self, data)
-		elseif self.SetValue then self:SetValue(data) end
+		if baseDeser then baseDeser(self, data) elseif self.SetValue then self:SetValue(data) end
 		self:SetEnabled(target)
 	end
-
 	if cfg.Tooltip and rowOf(flag) then
 		local row = rowOf(flag)
 		Lib:Connect(row.MouseEnter, function() Enhance.ShowTooltip(cfg.Tooltip) end)
 		Lib:Connect(row.MouseLeave, function() Enhance.HideTooltip() end)
 	end
-
 	local row = rowOf(flag)
 	if row then
-		elements[#elements + 1] = {
-			Name = cfg.Text or flag.Type, Flag = flag, Row = row,
-			Section = section and section.Title or "", Tab = flag.Tab,
-		}
+		elements[#elements + 1] = { Name = cfg.Text or flag.Type, Flag = flag, Row = row,
+			Section = section and section.Title or "", Tab = flag.Tab }
 		if section then
 			section.Flags = section.Flags or {}
 			table.insert(section.Flags, flag)
 		end
 	end
-	if flag.OnChanged then
-		flag.OnChanged:Connect(function() Enhance.RefreshDeps() end)
-	end
+	if flag.OnChanged then flag.OnChanged:Connect(function() Enhance.RefreshDeps() end) end
 	return flag
 end
 
@@ -101,7 +82,6 @@ function Enhance.RefreshDeps()
 		if other then d.flag:SetEnabled(other.Value == d.expected) end
 	end
 end
-
 function Enhance.ShowTooltip(text)
 	if tooltipLabel then tooltipLabel.Text = text tooltipLabel.Visible = true end
 end
@@ -148,7 +128,6 @@ local function attachSearch(window)
 		Rotation = 45, BorderSizePixel = 0, Parent = btn },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
 	T.Register(handle, { BackgroundColor3 = "SubText" })
-
 	local bar = U.New("Frame", { Size = UDim2.new(1, -16, 0, 30),
 		Position = UDim2.fromOffset(8, 46), BorderSizePixel = 0, Visible = false,
 		ZIndex = 30, Parent = window.Frame },
@@ -161,7 +140,6 @@ local function attachSearch(window)
 		PlaceholderText = "Search all controls...", TextSize = 12, ClearTextOnFocus = false,
 		TextXAlignment = Enum.TextXAlignment.Left, ZIndex = 31, Parent = bar })
 	T.Register(box, { TextColor3 = "Text", PlaceholderColor3 = "SubText", Font = "Font" })
-
 	local results = U.New("ScrollingFrame", { Size = UDim2.new(1, -16, 0, 180),
 		Position = UDim2.fromOffset(8, 80), BorderSizePixel = 0, Visible = false,
 		ScrollBarThickness = 2, CanvasSize = UDim2.new(),
@@ -173,10 +151,9 @@ local function attachSearch(window)
 		  U.New("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }) })
 	T.Register(results, { BackgroundColor3 = "Card", ScrollBarImageColor3 = "Accent" })
 	T.Register(results.UIStroke, { Color = "Stroke" })
-
 	local function jump(el)
 		if el.Tab and el.Tab.Window then el.Tab.Window:SwitchTab(el.Tab) end
-		bar.Visible = false results.Visible = false box.Text = ""
+		bar.Visible, results.Visible, box.Text = false, false, ""
 		local flash = U.New("Frame", { Size = UDim2.fromScale(1, 1),
 			BackgroundTransparency = 0.5, BorderSizePixel = 0, ZIndex = 15, Parent = el.Row },
 			{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }) })
@@ -189,7 +166,6 @@ local function attachSearch(window)
 			sc.CanvasPosition = Vector2.new(0, math.max(y - 20, 0))
 		end
 	end
-
 	local function run()
 		for _, c in ipairs(results:GetChildren()) do
 			if c:IsA("TextButton") then c:Destroy() end
@@ -241,7 +217,6 @@ local function buildPanel()
 	T.Register(head, { TextColor3 = "Accent", Font = "FontBold" })
 	U.Draggable(Lib, panel, head)
 end
-
 local panelEnabled = false
 local function refreshPanel()
 	if not panel then return end
@@ -267,22 +242,15 @@ function Enhance.SetKeybindPanel(v)
 end
 
 function Enhance.Init(l)
-	Lib = l
-	U = Lib.Utility
-	T = Lib.Theme
-	Lib.Enhance = Enhance
-	Lib.Elements = elements
+	Lib, U, T = l, l.Utility, l.Theme
+	Lib.Enhance, Lib.Elements = Enhance, elements
 	buildTooltip()
 	buildPanel()
-
 	local function cfgOf(compName, a, b)
-		if compName == "Button" then
-			return type(a) == "table" and a or { Text = a }
-		elseif compName == "Toggle" then
-			return type(b) == "table" and b or { Default = b, Text = a }
+		if compName == "Button" then return type(a) == "table" and a or { Text = a }
+		elseif compName == "Toggle" then return type(b) == "table" and b or { Default = b, Text = a }
 		elseif compName == "Asset" or compName == "Video" or compName == "Viewport" or compName == "Web" then
-			return type(a) == "table" and a or {}
-		end
+			return type(a) == "table" and a or {} end
 		return type(b) == "table" and b or {}
 	end
 	for name, comp in pairs(Lib.Components) do
@@ -294,32 +262,24 @@ function Enhance.Init(l)
 			return result
 		end
 	end
-
 	local rawCreate = Lib.CreateWindow
 	Lib.CreateWindow = function(self, cfg)
 		local w = rawCreate(self, cfg)
 		attachSearch(w)
 		return w
 	end
-
 	function Lib:SetEnabled(flagName, v)
 		local f = self.Flags[flagName]
 		if f and f.SetEnabled then f:SetEnabled(v) end
 	end
 	function Lib:ResetAll()
-		for _, f in pairs(self.Flags) do
-			if f.Reset then f:Reset() end
-		end
+		for _, f in pairs(self.Flags) do if f.Reset then f:Reset() end end
 		self:Notify({ Text = "All controls reset to defaults", Type = "info" })
 	end
-
 	local acc = 0
 	Lib:Connect(game:GetService("RunService").Heartbeat, function(dt)
 		acc = acc + dt
-		if acc >= 0.5 then
-			acc = 0
-			if panelEnabled then refreshPanel() end
-		end
+		if acc >= 0.5 then acc = 0 if panelEnabled then refreshPanel() end end
 	end)
 end
 
@@ -332,18 +292,12 @@ function Enhance.BuildSettings(section)
 		Callback = function(v) Enhance.SetKeybindPanel(v) end })
 	section:AddToggle("uget_compact", { Text = "Compact layout", Default = Lib.Layout.Compact,
 		Tooltip = "Force the mobile-style single column layout",
-		Callback = function(v)
-			Lib.Layout.Compact = v
-			Lib.Layout.Changed:Fire(v)
-		end })
+		Callback = function(v) Lib.Layout.Compact = v Lib.Layout.Changed:Fire(v) end })
 	section:AddButton({ Text = "Reset all controls", Variant = "Danger", DoubleClick = true,
 		Func = function() Lib:ResetAll() end })
-
 	local mgr = section.Tab and section.Tab:AddSection("Control manager", "Right") or section
 	local names = {}
-	for name, f in pairs(Lib.Flags) do
-		if f.SetEnabled then names[#names + 1] = name end
-	end
+	for name, f in pairs(Lib.Flags) do if f.SetEnabled then names[#names + 1] = name end end
 	table.sort(names)
 	local dd = mgr:AddDropdown("uget_mgr_pick", { Text = "Control", Values = names,
 		Searchable = true, AllowNull = true, Tooltip = "Pick any control to manage it" })

@@ -1,7 +1,7 @@
--- UGeT UI | original Roblox Luau UI library (plain-Lua compatible)
+-- UGeT | original Roblox Luau UI library (plain-Lua compatible)
 local Library = {
-	Version = "1.2.0",
-	Name = "UGeT UI",
+	Version = "1.0.0",
+	Name = "UGeT",
 	Flags = {},
 	Windows = {},
 	Toggled = true,
@@ -32,7 +32,7 @@ end
 
 function Library.Init()
 	if Library._Init then return Library end
-	local M = assert(Library._Modules, "UGeT UI: modules not loaded. Call Library.Use{} first.")
+	local M = assert(Library._Modules, "UGeT: modules not loaded. Call Library.Use{} first.")
 	Library.Utility = M.Utility
 	Library.Theme = M.Theme
 	Library.Layout = M.Layout
@@ -46,6 +46,13 @@ function Library.Init()
 	}
 
 	Library.Maid = M.Utility.Maid()
+	-- UGET_RERUN_SAFE: drop any previous instance before creating a new one
+	pcall(function()
+		local gp = M.Utility.GuiParent()
+		for _, child in ipairs(gp:GetChildren()) do
+			if child.Name == "UGeT_UI" or child.Name == "UGeT" then child:Destroy() end
+		end
+	end)
 	Library.ScreenGui = M.Utility.New("ScreenGui", {
 		Name = "UGeT_UI", ResetOnSpawn = false, IgnoreGuiInset = true,
 		ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 999,
@@ -106,7 +113,7 @@ function Library.Init()
 end
 
 function Library:CreateWindow(cfg)
-	assert(self._Init, "UGeT UI: call Library.Init() first.")
+	assert(self._Init, "UGeT: call Library.Init() first.")
 	local window = self.Window.Create(self, cfg or {})
 	table.insert(self.Windows, window)
 	return window

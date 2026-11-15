@@ -1,4 +1,4 @@
--- UGeT UI | Input: text field, numeric filter, finished mode
+-- UGeT | Input: text field, numeric filter, finished mode
 local Input = {}
 
 function Input.Create(Lib, section, flagName, cfg)

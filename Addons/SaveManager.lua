@@ -1,4 +1,4 @@
--- UGeT UI | SaveManager: flag serialization, file IO, autoload, config UI
+-- UGeT | SaveManager: flag serialization, file IO, autoload, config UI
 local SaveManager = {}
 local HttpService = game:GetService("HttpService")
 local Lib

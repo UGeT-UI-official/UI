@@ -1,4 +1,4 @@
--- UGeT UI | MusicPlayer: top player bar + Music tab
+-- UGeT | MusicPlayer: top player bar + Music tab
 -- In-Roblox playback uses Roblox audio assets. Spotify/YouTube open as external
 -- links (Roblox cannot stream those services directly).
 local MusicPlayer = {}

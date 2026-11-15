@@ -1,4 +1,4 @@
--- UGeT UI | Slider: drag track + tap-to-type value + fine steppers
+-- UGeT | Slider: drag track + tap-to-type value + fine steppers
 local Slider = {}
 function Slider.Create(Lib, section, flagName, cfg)
 	local U, T = Lib.Utility, Lib.Theme

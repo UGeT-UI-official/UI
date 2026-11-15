@@ -1,4 +1,4 @@
--- UGeT UI | Keybind: inline capture, mode chip (Toggle / Hold / Press)
+-- UGeT | Keybind: inline capture, mode chip (Toggle / Hold / Press)
 local Keybind = {}
 local SHORT = { MouseButton1 = "MB1", MouseButton2 = "MB2", MouseButton3 = "MB3" }
 local MODES = { "Toggle", "Hold", "Press" }

@@ -1,4 +1,4 @@
--- UGeT UI | Dropdown: inline accordion (no overlay menus)
+-- UGeT | Dropdown: inline accordion (no overlay menus)
 local Dropdown = {}
 local Players = game:GetService("Players")
 

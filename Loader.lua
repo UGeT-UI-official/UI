@@ -1,4 +1,4 @@
--- UGeT UI | Loader: one loadstring loads the whole library + a full demo window.
+-- UGeT | Loader: one loadstring loads the whole library + a full demo window.
 local BASE = "https://raw.githubusercontent.com/WaseranYaro8/UGeT-UI/main/"
 local function get(p)
 	local ok, src = pcall(function() return game:HttpGet(BASE .. p .. "?v=" .. tostring(os.time())) end)
@@ -37,12 +37,12 @@ Library.Use({
 })
 Library.Init()
 
-local Window = Library:CreateWindow({ Title = "UGeT UI", Subtitle = "v" .. Library.Version })
+local Window = Library:CreateWindow({ Title = "UGeT", Subtitle = "v" .. Library.Version })
 Library.Guide.BuildTab(Window:AddTab("Guide", "G"))
 
 local Main = Window:AddTab("Main", "M")
 Main:AddButton("Test Button", function()
-	Library:Notify({ Text = "UGeT UI is working", Type = "success" })
+	Library:Notify({ Text = "UGeT is working", Type = "success" })
 end)
 local demo = Main:AddSection("Controls", "Right")
 demo:AddToggle("demo_toggle", { Text = "Example toggle", Default = false })
@@ -63,10 +63,10 @@ Library.Enhance.BuildSettings(Settings:AddSection("Controls"))
 Library.SaveManager:SetFolder("UGeT-UI")
 Library.SaveManager:BuildSection(Settings:AddSection("Config", "Right"))
 local sys = Settings:AddSection("System", "Right")
-sys:AddButton({ Text = "Unload UGeT UI", Variant = "Danger", DoubleClick = true, Func = function()
+sys:AddButton({ Text = "Unload UGeT", Variant = "Danger", DoubleClick = true, Func = function()
 	Library:Destroy()
 end })
 
 Library.SaveManager:LoadAutoload()
-Library:Notify({ Title = "UGeT UI", Text = "Loaded. Read the Guide tab. RightControl or the UGeT button toggles the UI.", Type = "success", Time = 6 })
+Library:Notify({ Title = "UGeT", Text = "Loaded. Read the Guide tab. RightControl or the UGeT button toggles the UI.", Type = "success", Time = 6 })
 return Library

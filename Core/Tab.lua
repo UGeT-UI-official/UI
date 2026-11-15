@@ -1,4 +1,4 @@
--- UGeT UI | tab page + collapsible sections + section/tab enable
+-- UGeT | tab page + collapsible sections + section/tab enable
 local Tab = {}
 local COMPONENT_METHODS = {
 	Button = "AddButton", Toggle = "AddToggle", Slider = "AddSlider",
@@ -52,9 +52,7 @@ local function buildSection(Lib, column, title, tab)
 	Lib:Connect(head.MouseEnter, function() U.Tween(card.UIStroke, 0.12, { Color = T.Current.Stroke }) end)
 	Lib:Connect(head.MouseLeave, function() U.Tween(card.UIStroke, 0.12, { Color = T.Current.StrokeSoft }) end)
 	function section:SetEnabled(v)
-		for _, f in ipairs(self.Flags) do
-			if f.SetEnabled then f:SetEnabled(v) end
-		end
+		for _, f in ipairs(self.Flags) do if f.SetEnabled then f:SetEnabled(v) end end
 	end
 	for comp, method in pairs(COMPONENT_METHODS) do
 		section[method] = function(s, ...)

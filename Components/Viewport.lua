@@ -1,4 +1,4 @@
--- UGeT UI | Viewport: real 3D preview, orbit drag + auto spin
+-- UGeT | Viewport: real 3D preview, orbit drag + auto spin
 local Viewport = {}
 local InsertService = game:GetService("InsertService")
 local RunService = game:GetService("RunService")
