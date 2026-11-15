@@ -373,6 +373,8 @@ function Window.Create(Lib, cfg)
 	})
 	T.Register(main, { BackgroundColor3 = "Surface" })
 	T.Register(main.UIStroke, { Color = "Stroke" })
+	local glow = U.New("UIStroke", { Thickness = 2, Transparency = 0.8, Parent = main }) -- UGET_GLOW
+	T.Register(glow, { Color = "Accent" })
 	self.Frame = main
 	U.Tween(main.UIScale, 0.28, { Scale = 1 }, Enum.EasingStyle.Back)
 
@@ -624,7 +626,6 @@ return Window
 
 end)()
 M.Tab = (function()
--- UGeT | tab page + collapsible sections + section/tab enable
 local Tab = {}
 local COMPONENT_METHODS = {
 	Button = "AddButton", Toggle = "AddToggle", Slider = "AddSlider",
@@ -636,47 +637,28 @@ local function buildSection(Lib, column, title, tab)
 	local U, T = Lib.Utility, Lib.Theme
 	local card = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BorderSizePixel = 0, Parent = column },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 10) }),
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
 		  U.New("UIStroke", { Thickness = 1 }) })
-	T.Register(card, { BackgroundColor3 = "Card" })
-	T.Register(card.UIStroke, { Color = "StrokeSoft" })
-	local head = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 34), Text = "",
-		AutoButtonColor = false, BackgroundTransparency = 1, Parent = card })
-	local tick = U.New("Frame", { Size = UDim2.fromOffset(3, 14),
-		Position = UDim2.new(0, 12, 0.5, -7), BorderSizePixel = 0, Parent = head },
-		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	T.Register(tick, { BackgroundColor3 = "Accent" })
-	local titleLabel = U.New("TextLabel", { Size = UDim2.new(1, -52, 1, 0),
-		Position = UDim2.fromOffset(24, 0), BackgroundTransparency = 1, Text = title,
-		TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Parent = head })
-	T.Register(titleLabel, { TextColor3 = "Text", Font = "FontBold" })
-	local chev = U.New("Frame", { AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -12, 0.5, 0), Size = UDim2.fromOffset(14, 14),
-		BackgroundTransparency = 1, Rotation = 0, Parent = head })
-	local function cline(x, rot)
-		local f = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
-			Size = UDim2.fromOffset(7, 1.6), Position = UDim2.fromScale(x, 0.5),
-			Rotation = rot, BorderSizePixel = 0, Parent = chev },
-			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-		T.Register(f, { BackgroundColor3 = "SubText" })
-	end
-	cline(0.3, 45) cline(0.7, -45)
+	T.Register(card, { BackgroundColor3 = "Surface" })
+	T.Register(card.UIStroke, { Color = "Stroke" })
+	local head = U.New("TextButton", { AutomaticSize = Enum.AutomaticSize.X,
+		Size = UDim2.fromOffset(0, 16), Position = UDim2.fromOffset(10, -8),
+		Text = "  " .. title .. "  ", TextSize = 12, AutoButtonColor = false,
+		BorderSizePixel = 0, Parent = card })
+	T.Register(head, { BackgroundColor3 = "Background", TextColor3 = "SubText", Font = "FontBold" })
 	local body = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = card }, {
-		U.New("UIPadding", { PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12),
-			PaddingBottom = UDim.new(0, 12) }),
-		U.New("UIListLayout", { Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }),
+		U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10),
+			PaddingTop = UDim.new(0, 12), PaddingBottom = UDim.new(0, 10) }),
+		U.New("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
 	})
 	local section = { Frame = card, Body = body, Title = title, Header = head,
 		Tab = tab, Flags = {}, Collapsed = false }
 	function section:SetCollapsed(v)
 		self.Collapsed = v and true or false
 		body.Visible = not self.Collapsed
-		U.Tween(chev, 0.18, { Rotation = self.Collapsed and -90 or 0 })
 	end
 	Lib:Connect(head.Activated, function() section:SetCollapsed(not section.Collapsed) end)
-	Lib:Connect(head.MouseEnter, function() U.Tween(card.UIStroke, 0.12, { Color = T.Current.Stroke }) end)
-	Lib:Connect(head.MouseLeave, function() U.Tween(card.UIStroke, 0.12, { Color = T.Current.StrokeSoft }) end)
 	function section:SetEnabled(v)
 		for _, f in ipairs(self.Flags) do if f.SetEnabled then f:SetEnabled(v) end end
 	end
@@ -721,7 +703,7 @@ function Tab.Create(Lib, window, name)
 		Visible = false, Parent = window.Pages },
 		{ U.New("UIScale", { Scale = 1 }),
 		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10),
-			PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10) }) })
+			PaddingTop = UDim.new(0, 12), PaddingBottom = UDim.new(0, 10) }) })
 	T.Register(page, { ScrollBarImageColor3 = "Accent" })
 	self.Page = page
 	local holder = U.New("Frame", { Size = UDim2.new(1, -6, 0, 0),
@@ -733,7 +715,7 @@ function Tab.Create(Lib, window, name)
 		return U.New("Frame", { Size = UDim2.new(0.5, -5, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1,
 			LayoutOrder = order, Parent = holder },
-			{ U.New("UIListLayout", { Padding = UDim.new(0, 10), SortOrder = Enum.SortOrder.LayoutOrder }) })
+			{ U.New("UIListLayout", { Padding = UDim.new(0, 12), SortOrder = Enum.SortOrder.LayoutOrder }) })
 	end
 	self.Left = column(1)
 	self.Right = column(2)

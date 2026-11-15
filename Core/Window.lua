@@ -38,6 +38,8 @@ function Window.Create(Lib, cfg)
 	})
 	T.Register(main, { BackgroundColor3 = "Surface" })
 	T.Register(main.UIStroke, { Color = "Stroke" })
+	local glow = U.New("UIStroke", { Thickness = 2, Transparency = 0.8, Parent = main }) -- UGET_GLOW
+	T.Register(glow, { Color = "Accent" })
 	self.Frame = main
 	U.Tween(main.UIScale, 0.28, { Scale = 1 }, Enum.EasingStyle.Back)
 
