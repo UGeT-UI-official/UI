@@ -1,14 +1,12 @@
--- UGeT | Controls: polished floating show/hide button
 local Controls = {}
 local Lib
-
 function Controls.Init(l)
 	Lib = l
 	Lib.Controls = Controls
 	local U, T = Lib.Utility, Lib.Theme
-
 	local btn = U.New("TextButton", { Name = "UGeT_Toggle",
-		Position = U.IsTouch and UDim2.new(1, -112, 1, -60) or UDim2.fromOffset(12, 12),
+		AnchorPoint = Vector2.new(1, 0),
+		Position = UDim2.new(1, -80, 0, 14),
 		Size = U.IsTouch and UDim2.fromOffset(100, 46) or UDim2.fromOffset(88, 36),
 		Text = "", AutoButtonColor = false, BorderSizePixel = 0, ZIndex = 60,
 		Parent = Lib.ScreenGui },
@@ -17,7 +15,6 @@ function Controls.Init(l)
 	T.Register(btn, { BackgroundColor3 = "Surface" })
 	T.Register(btn.UIStroke, { Color = "Accent" })
 	Controls.Button = btn
-
 	local dot = U.New("Frame", { Size = UDim2.fromOffset(9, 9),
 		Position = UDim2.new(0, 14, 0.5, -4.5), BorderSizePixel = 0, Parent = btn },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
@@ -26,13 +23,11 @@ function Controls.Init(l)
 		Position = UDim2.fromOffset(30, 0), BackgroundTransparency = 1, Text = "UGeT",
 		TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Parent = btn })
 	T.Register(label, { TextColor3 = "Text", Font = "FontBold" })
-
 	local function render()
 		local on = Lib.Toggled
 		U.Tween(dot, 0.2, { BackgroundColor3 = on and T.Current.Accent or T.Current.SubText })
 		U.Tween(btn.UIStroke, 0.2, { Color = on and T.Current.Accent or T.Current.Stroke })
 	end
-
 	U.Draggable(Lib, btn, btn)
 	Lib:Connect(btn.Activated, function()
 		btn.UIScale.Scale = 0.9
@@ -40,8 +35,7 @@ function Controls.Init(l)
 		Lib:Toggle()
 		render()
 	end)
-	Lib:Connect(T.Changed:Connect(render))
+	Lib:Connect(T.Changed, render)
 	render()
 end
-
 return Controls

@@ -224,28 +224,32 @@ return Utility
 
 end)()
 M.Theme = (function()
--- UGeT | theme tokens + presets
 local Theme = {}
 local Lib
 Theme.Current = {
-	Background = Color3.fromRGB(11, 13, 17),
-	Surface    = Color3.fromRGB(17, 20, 26),
-	Card       = Color3.fromRGB(23, 27, 35),
-	Stroke     = Color3.fromRGB(44, 50, 63),
-	StrokeSoft = Color3.fromRGB(33, 38, 49),
-	Accent     = Color3.fromRGB(64, 220, 180),
-	AccentSoft = Color3.fromRGB(30, 68, 60),
-	Text       = Color3.fromRGB(238, 241, 246),
-	SubText    = Color3.fromRGB(148, 156, 170),
-	Danger     = Color3.fromRGB(255, 104, 104),
-	Success    = Color3.fromRGB(88, 224, 150),
-	Warning    = Color3.fromRGB(255, 200, 90),
+	Background = Color3.fromRGB(0, 0, 0),
+	Surface    = Color3.fromRGB(9, 8, 8),
+	Card       = Color3.fromRGB(16, 16, 16),
+	Stroke     = Color3.fromRGB(38, 38, 38),
+	StrokeSoft = Color3.fromRGB(26, 26, 26),
+	Accent     = Color3.fromRGB(255, 255, 255),
+	AccentSoft = Color3.fromRGB(48, 48, 48),
+	Text       = Color3.fromRGB(255, 255, 255),
+	SubText    = Color3.fromRGB(150, 150, 150),
+	Danger     = Color3.fromRGB(255, 50, 50),
+	Success    = Color3.fromRGB(0, 210, 80),
+	Warning    = Color3.fromRGB(255, 196, 84),
 	Info       = Color3.fromRGB(102, 180, 255),
 	Font       = Enum.Font.Gotham,
-	FontBold   = Enum.Font.GothamBold,
+	FontBold   = Enum.Font.GothamBlack,
 }
 Theme.Presets = {
-	UGeT = table.clone(Theme.Current),
+	Obsidian = table.clone(Theme.Current),
+	UGeT = { Background = Color3.fromRGB(11,13,17), Surface = Color3.fromRGB(17,20,26),
+		Card = Color3.fromRGB(23,27,35), Stroke = Color3.fromRGB(44,50,63),
+		StrokeSoft = Color3.fromRGB(33,38,49), Accent = Color3.fromRGB(64,220,180),
+		AccentSoft = Color3.fromRGB(30,68,60), Text = Color3.fromRGB(238,241,246),
+		SubText = Color3.fromRGB(148,156,170) },
 	AMOLED = { Background = Color3.fromRGB(0,0,0), Surface = Color3.fromRGB(8,8,10),
 		Card = Color3.fromRGB(14,14,18), Stroke = Color3.fromRGB(36,36,44),
 		StrokeSoft = Color3.fromRGB(26,26,32), Accent = Color3.fromRGB(64,220,180),
@@ -1182,15 +1186,16 @@ function Toggle.Create(Lib, section, flagName, cfgOrBool, fn)
 	local knob = U.New("Frame", { Size = UDim2.fromOffset(ks, ks),
 		Position = UDim2.new(0, 3, 0.5, -ks / 2), BorderSizePixel = 0, Parent = pill },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	T.Register(knob, { BackgroundColor3 = "Text" })
 	local function render(v, instant)
 		local kp = v and UDim2.new(1, -ks - 3, 0.5, -ks / 2) or UDim2.new(0, 3, 0.5, -ks / 2)
 		local pc = v and T.Current.Accent or T.Current.Stroke
+		local kc = v and T.Current.Background or T.Current.Text
 		if instant then
 			knob.Position = kp
 			pill.BackgroundColor3 = pc
+			knob.BackgroundColor3 = kc
 		else
-			U.Tween(knob, 0.18, { Position = kp })
+			U.Tween(knob, 0.18, { Position = kp, BackgroundColor3 = kc })
 			U.Tween(pill, 0.18, { BackgroundColor3 = pc })
 		end
 	end
@@ -2887,7 +2892,7 @@ function ThemeManager.BuildSection(section)
 	table.sort(presetNames)
 
 	section:AddDropdown("uget_theme_preset", {
-		Text = "Preset", Values = presetNames, Default = "UGeT",
+		Text = "Preset", Values = presetNames, Default = "Obsidian",
 		Callback = function(v)
 			if applying or not v then return end
 			applying = true
@@ -3130,17 +3135,15 @@ return Guide
 
 end)()
 M.Controls = (function()
--- UGeT | Controls: polished floating show/hide button
 local Controls = {}
 local Lib
-
 function Controls.Init(l)
 	Lib = l
 	Lib.Controls = Controls
 	local U, T = Lib.Utility, Lib.Theme
-
 	local btn = U.New("TextButton", { Name = "UGeT_Toggle",
-		Position = U.IsTouch and UDim2.new(1, -112, 1, -60) or UDim2.fromOffset(12, 12),
+		AnchorPoint = Vector2.new(1, 0),
+		Position = UDim2.new(1, -80, 0, 14),
 		Size = U.IsTouch and UDim2.fromOffset(100, 46) or UDim2.fromOffset(88, 36),
 		Text = "", AutoButtonColor = false, BorderSizePixel = 0, ZIndex = 60,
 		Parent = Lib.ScreenGui },
@@ -3149,7 +3152,6 @@ function Controls.Init(l)
 	T.Register(btn, { BackgroundColor3 = "Surface" })
 	T.Register(btn.UIStroke, { Color = "Accent" })
 	Controls.Button = btn
-
 	local dot = U.New("Frame", { Size = UDim2.fromOffset(9, 9),
 		Position = UDim2.new(0, 14, 0.5, -4.5), BorderSizePixel = 0, Parent = btn },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
@@ -3158,13 +3160,11 @@ function Controls.Init(l)
 		Position = UDim2.fromOffset(30, 0), BackgroundTransparency = 1, Text = "UGeT",
 		TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Parent = btn })
 	T.Register(label, { TextColor3 = "Text", Font = "FontBold" })
-
 	local function render()
 		local on = Lib.Toggled
 		U.Tween(dot, 0.2, { BackgroundColor3 = on and T.Current.Accent or T.Current.SubText })
 		U.Tween(btn.UIStroke, 0.2, { Color = on and T.Current.Accent or T.Current.Stroke })
 	end
-
 	U.Draggable(Lib, btn, btn)
 	Lib:Connect(btn.Activated, function()
 		btn.UIScale.Scale = 0.9
@@ -3172,10 +3172,9 @@ function Controls.Init(l)
 		Lib:Toggle()
 		render()
 	end)
-	Lib:Connect(T.Changed:Connect(render))
+	Lib:Connect(T.Changed, render)
 	render()
 end
-
 return Controls
 
 end)()
@@ -3490,7 +3489,9 @@ end)()
 Library.Use(M)
 Library.Init()
 
-if not (getgenv and getgenv().UGET_NO_DEMO) then
+local __noDemo = getgenv and getgenv().UGET_NO_DEMO
+if getgenv then getgenv().UGET_NO_DEMO = nil end
+if not __noDemo then
 local Window = Library:CreateWindow({ Title = "UGeT", Subtitle = "v1.0.0" })
 if Library.Guide then Library.Guide.BuildTab(Window:AddTab("Guide","G")) end
 local Main = Window:AddTab("Main","M")

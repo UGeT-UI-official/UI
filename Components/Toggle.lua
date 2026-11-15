@@ -22,15 +22,16 @@ function Toggle.Create(Lib, section, flagName, cfgOrBool, fn)
 	local knob = U.New("Frame", { Size = UDim2.fromOffset(ks, ks),
 		Position = UDim2.new(0, 3, 0.5, -ks / 2), BorderSizePixel = 0, Parent = pill },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	T.Register(knob, { BackgroundColor3 = "Text" })
 	local function render(v, instant)
 		local kp = v and UDim2.new(1, -ks - 3, 0.5, -ks / 2) or UDim2.new(0, 3, 0.5, -ks / 2)
 		local pc = v and T.Current.Accent or T.Current.Stroke
+		local kc = v and T.Current.Background or T.Current.Text
 		if instant then
 			knob.Position = kp
 			pill.BackgroundColor3 = pc
+			knob.BackgroundColor3 = kc
 		else
-			U.Tween(knob, 0.18, { Position = kp })
+			U.Tween(knob, 0.18, { Position = kp, BackgroundColor3 = kc })
 			U.Tween(pill, 0.18, { BackgroundColor3 = pc })
 		end
 	end

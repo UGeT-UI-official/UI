@@ -19,7 +19,7 @@ function ThemeManager.BuildSection(section)
 	table.sort(presetNames)
 
 	section:AddDropdown("uget_theme_preset", {
-		Text = "Preset", Values = presetNames, Default = "UGeT",
+		Text = "Preset", Values = presetNames, Default = "Obsidian",
 		Callback = function(v)
 			if applying or not v then return end
 			applying = true
