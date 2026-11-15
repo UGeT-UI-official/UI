@@ -66,6 +66,7 @@ function Library.Init()
 
 	M.Theme.Init(Library)
 	M.Layout.Init(Library)
+	if M.Animations then M.Animations.Init(Library) end
 	M.Notifications.Init(Library)
 	M.ThemeManager.Init(Library)
 	M.SaveManager.Init(Library)
@@ -186,6 +187,7 @@ if ok and isTree then
 		Guide = require(script.Addons.Guide),
 		Controls = require(script.Addons.Controls),
 		Enhance = require(script.Core.Enhance),
+		Animations = require(script.Addons.Animations),
 	})
 	Library.Init()
 end
