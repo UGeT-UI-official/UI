@@ -3473,7 +3473,7 @@ Library.Init()
 
 local __noDemo = getgenv and getgenv().UGET_NO_DEMO
 if getgenv then getgenv().UGET_NO_DEMO = nil end
-if not __noDemo then
+do
 local Window = Library:CreateWindow({ Title = "UGeT", Subtitle = "v1.0.0" })
 if Library.Guide then Library.Guide.BuildTab(Window:AddTab("Guide","G")) end
 local Main = Window:AddTab("Main","M")
