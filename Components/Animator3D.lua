@@ -20,8 +20,8 @@ function Animator3D.BuildTab(tab)
 		ClipsDescendants = true, Parent = viewSec.Body },
 		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
 		  U.New("UIStroke", { Thickness = 1 }) })
-	T.Register(holder, { BackgroundColor3 = "Background" })
-	T.Register(holder.UIStroke, { Color = "StrokeSoft" })
+	T.Register(holder, { BackgroundColor3 = "BackgroundColor" })
+	T.Register(holder.UIStroke, { Color = "OutlineColor" })
 	local vf = U.New("ViewportFrame", { Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1, Ambient = Color3.fromRGB(190, 190, 190),
 		LightColor = Color3.fromRGB(255, 255, 255), LightDirection = Vector3.new(-1, -1, -1),
@@ -88,7 +88,7 @@ function Animator3D.BuildTab(tab)
 		table.sort(keyframes, function(a, b) return a.t < b.t end)
 	end
 	local function updateCount() countLabel:SetText("Keyframes: " .. #keyframes) end
-	kf:AddButton({ Text = "Add keyframe at current time", Variant = "Accent", Func = function()
+	kf:AddButton({ Text = "Add keyframe at current time", Variant = "AccentColor", Func = function()
 		local k = { t = time }
 		for key, v in pairs(pose) do k[key] = v end
 		table.insert(keyframes, k)
@@ -96,7 +96,7 @@ function Animator3D.BuildTab(tab)
 		updateCount()
 		Lib:Notify({ Text = "Keyframe added at " .. string.format("%.2f", time) .. "s", Type = "success", Time = 2 })
 	end })
-	kf:AddButton({ Text = "Clear keyframes", Variant = "Danger", DoubleClick = true, Func = function()
+	kf:AddButton({ Text = "Clear keyframes", Variant = "DestructiveColor", DoubleClick = true, Func = function()
 		keyframes = {}
 		updateCount()
 	end })
@@ -111,7 +111,7 @@ function Animator3D.BuildTab(tab)
 			if not playing then applyPose(interpolate(time)) end
 		end })
 	pb:AddToggle("anim_loop", { Text = "Loop", Default = true, Callback = function(v) loop = v end })
-	local playBtn = pb:AddButton({ Text = "Play", Variant = "Accent", Func = function()
+	local playBtn = pb:AddButton({ Text = "Play", Variant = "AccentColor", Func = function()
 		if #keyframes == 0 then
 			Lib:Notify({ Text = "Add keyframes first", Type = "warn" })
 			return

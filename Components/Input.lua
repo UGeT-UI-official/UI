@@ -4,11 +4,12 @@ function Input.Create(Lib, section, flagName, cfg)
 	cfg = cfg or {}
 	local flag = U.Flag(Lib, flagName, "Input", cfg.Default or "")
 	flag.Callback = cfg.Callback or function() end
-	local rowH = U.IsTouch and 44 or 32
+	local touch = U.IsTouch
+	local rowH = touch and 44 or 32
 	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
 		BackgroundTransparency = 1, Parent = section.Body })
 	local label = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 14),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = touch and 13 or 12,
 		TextXAlignment = Enum.TextXAlignment.Left, Parent = row })
 	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
 	local box = U.New("TextBox", { Size = UDim2.new(1, 0, 0, 22),
@@ -19,10 +20,9 @@ function Input.Create(Lib, section, flagName, cfg)
 		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 		  U.New("UIStroke", { Thickness = 1 }),
 		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 6), PaddingRight = UDim.new(0, 6) }) })
-	T.Register(box, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", PlaceholderColor3 = "SubText", Font = "Font" })
+	T.Register(box, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", PlaceholderColor3 = "SubTextColor", Font = "Font" })
 	T.Register(box.UIStroke, { Color = "OutlineColor" })
-	if cfg.Numeric then box:SetAttribute("numeric", true) end
-	Lib:Connect(box:GetPropertyChangedSignal("Text"), function()
+	Lib:Connect(box:GetPropertyChangedSignal("FontColor"), function()
 		if cfg.Numeric and box.Text ~= "" and not tonumber(box.Text) then
 			box.Text = box.Text:sub(1, -2)
 		end

@@ -31,9 +31,9 @@ function Asset.Create(Lib, section, cfg)
 		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
 		  U.New("UIStroke", { Thickness = 1 }),
 		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10) }) })
-	T.Register(idBox, { BackgroundColor3 = "Surface", TextColor3 = "Text",
-		PlaceholderColor3 = "SubText", Font = "Font" })
-	T.Register(idBox.UIStroke, { Color = "Stroke" })
+	T.Register(idBox, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor",
+		PlaceholderColor3 = "SubTextColor", Font = "Font" })
+	T.Register(idBox.UIStroke, { Color = "OutlineColor" })
 
 	local function smallButton(text, xOff, width)
 		local b = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0),
@@ -41,8 +41,8 @@ function Asset.Create(Lib, section, cfg)
 			Text = text, TextSize = 11, AutoButtonColor = false, BorderSizePixel = 0, Parent = topRow },
 			{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
 			  U.New("UIStroke", { Thickness = 1 }) })
-		T.Register(b, { BackgroundColor3 = "Surface", TextColor3 = "Text", Font = "FontBold" })
-		T.Register(b.UIStroke, { Color = "Stroke" })
+		T.Register(b, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+		T.Register(b.UIStroke, { Color = "OutlineColor" })
 		return b
 	end
 	local loadBtn = smallButton("Load", -64, 60)
@@ -52,7 +52,7 @@ function Asset.Create(Lib, section, cfg)
 		BackgroundTransparency = 1, Text = "", TextSize = 11,
 		TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
 		LayoutOrder = 2, Parent = row })
-	T.Register(infoLabel, { TextColor3 = "SubText", Font = "Font" })
+	T.Register(infoLabel, { TextColor3 = "SubTextColor", Font = "Font" })
 
 	local preview = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1,
@@ -70,7 +70,7 @@ function Asset.Create(Lib, section, cfg)
 		local wrap = U.New("Frame", { Size = UDim2.new(1, 0, 0, 150),
 			BorderSizePixel = 0, ClipsDescendants = true, Parent = preview },
 			{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }) })
-		T.Register(wrap, { BackgroundColor3 = "Background" })
+		T.Register(wrap, { BackgroundColor3 = "BackgroundColor" })
 		U.Checker(wrap, 600, 150)
 		U.New("ImageLabel", { Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
 			Image = uri, ScaleType = Enum.ScaleType.Fit, ZIndex = 2, Parent = wrap })
@@ -88,8 +88,8 @@ function Asset.Create(Lib, section, cfg)
 				TextSize = 12, AutoButtonColor = false, BorderSizePixel = 0, Parent = controls },
 				{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
 				  U.New("UIStroke", { Thickness = 1 }) })
-			T.Register(b, { BackgroundColor3 = "Surface", TextColor3 = "Text", Font = "FontBold" })
-			T.Register(b.UIStroke, { Color = "Stroke" })
+			T.Register(b, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+			T.Register(b.UIStroke, { Color = "OutlineColor" })
 			previewMaid:Give(b.Activated:Connect(fn))
 		end
 		ctl("Play", function() currentSound:Play() end)
@@ -104,8 +104,8 @@ function Asset.Create(Lib, section, cfg)
 			TextSize = 12, AutoButtonColor = false, BorderSizePixel = 0, Parent = preview },
 			{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
 			  U.New("UIStroke", { Thickness = 1 }) })
-		T.Register(b, { BackgroundColor3 = "Surface", TextColor3 = "Text", Font = "FontBold" })
-		T.Register(b.UIStroke, { Color = "Stroke" })
+		T.Register(b, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+		T.Register(b.UIStroke, { Color = "OutlineColor" })
 		previewMaid:Give(b.Activated:Connect(function()
 			if vf.IsPlaying then vf:Pause() else vf:Play() end
 		end))

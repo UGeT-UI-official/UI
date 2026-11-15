@@ -4,11 +4,12 @@ function ColorPicker.Create(Lib, section, flagName, cfg)
 	cfg = cfg or {}
 	local flag = U.Flag(Lib, flagName, "ColorPicker", cfg.Default or Color3.new(1,1,1))
 	flag.Callback = cfg.Callback or function() end
-	local rowH = U.IsTouch and 40 or 30
+	local touch = U.IsTouch
+	local rowH = touch and 40 or 30
 	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
 		BackgroundTransparency = 1, Parent = section.Body })
 	local label = U.New("TextLabel", { Size = UDim2.new(1, -40, 1, 0),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = touch and 13 or 12,
 		TextXAlignment = Enum.TextXAlignment.Left, Parent = row })
 	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
 	local sample = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),
@@ -59,7 +60,7 @@ function ColorPicker.Create(Lib, section, flagName, cfg)
 			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
 			  U.New("UIStroke", { Thickness = 1.5, Color = Color3.new(1,1,1) }) })
 		local closeBtn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 20),
-			Position = UDim2.new(0, 0, 1, -20), Text = "Close", TextSize = 11,
+			Position = UDim2.new(0, 0, 1, -20), Text = "閉じる", TextSize = 11,
 			AutoButtonColor = false, BorderSizePixel = 0, Parent = popup },
 			{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }) })
 		T.Register(closeBtn, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })

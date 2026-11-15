@@ -1,5 +1,5 @@
 local Tab = {}
-local COMPONENT_METHODS = {
+local METHODS = {
 	Button = "AddButton", Toggle = "AddToggle", Slider = "AddSlider",
 	Dropdown = "AddDropdown", Input = "AddInput", ColorPicker = "AddColorPicker",
 	Keybind = "AddKeybind", Asset = "AddAsset", Video = "AddVideo",
@@ -18,7 +18,7 @@ local function buildSection(Lib, column, title, tab)
 		Text = "  " .. (title or "Section") .. "  ", TextSize = 11,
 		BorderSizePixel = 0, Parent = card },
 		{ U.New("UIPadding", { PaddingLeft = UDim.new(0, 4), PaddingRight = UDim.new(0, 4) }) })
-	T.Register(head, { BackgroundColor3 = "BackgroundColor", TextColor3 = "FontColor", Font = "FontBold" })
+	T.Register(head, { BackgroundColor3 = "BackgroundColor", TextColor3 = "FontColor", Font = "Font" })
 	local body = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = card }, {
 		U.New("UIPadding", { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8),
@@ -30,7 +30,7 @@ local function buildSection(Lib, column, title, tab)
 	function section:SetEnabled(v)
 		for _, f in ipairs(self.Flags) do if f.SetEnabled then f:SetEnabled(v) end end
 	end
-	for comp, method in pairs(COMPONENT_METHODS) do
+	for comp, method in pairs(METHODS) do
 		section[method] = function(s, ...)
 			return Lib.Components[comp].Create(Lib, s, ...)
 		end
@@ -46,11 +46,11 @@ local function buildSection(Lib, column, title, tab)
 	function section:AddParagraph(heading, text)
 		local h = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 14), BackgroundTransparency = 1,
 			Text = heading, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = body })
-		T.Register(h, { TextColor3 = "FontColor", Font = "FontBold" })
+		T.Register(h, { TextColor3 = "FontColor", Font = "Font" })
 		local p = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Text = text,
 			TextSize = 11, TextWrapped = true, TextXAlignment = Enum.TextXAlignment.Left, Parent = body })
-		T.Register(p, { TextColor3 = "SubText", Font = "Font" })
+		T.Register(p, { TextColor3 = "SubTextColor", Font = "Font" })
 		return { SetText = function(_, t) p.Text = t end }
 	end
 	function section:AddDivider()
@@ -107,7 +107,7 @@ function Tab.Create(Lib, window, name)
 		if not self._default then self._default = self:AddSection("General", "Left") end
 		return self._default
 	end
-	for _, method in pairs(COMPONENT_METHODS) do
+	for _, method in pairs(METHODS) do
 		self[method] = function(s, ...)
 			local def = s:GetDefaultSection()
 			return def[method](def, ...)

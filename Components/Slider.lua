@@ -9,13 +9,14 @@ function Slider.Create(Lib, section, flagName, cfg)
 	local flag = U.Flag(Lib, flagName, "Slider", cfg.Default or min)
 	flag.Callback = cfg.Callback or function() end
 	flag.Min, flag.Max, flag.Step = min, max, step
-	local rowH = U.IsTouch and 44 or 34
+	local touch = U.IsTouch
+	local rowH = touch and 44 or 34
 	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
 		BackgroundTransparency = 1, Parent = section.Body })
 	local labelRow = U.New("Frame", { Size = UDim2.new(1, 0, 0, 16),
 		BackgroundTransparency = 1, Parent = row })
 	local label = U.New("TextLabel", { Size = UDim2.new(1, -60, 1, 0),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = touch and 13 or 12,
 		TextXAlignment = Enum.TextXAlignment.Left, Parent = labelRow })
 	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
 	local valueBtn = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),

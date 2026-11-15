@@ -11,7 +11,7 @@ function Notifications.Init(Lib)
 		if Lib.NotificationsEnabled == false then return end
 		if type(data) ~= "table" then data = { Text = tostring(data), Time = duration } end
 		duration = data.Time or 4
-		local toneMap = { success = "Success", warn = "Warning", error = "Danger", info = "Info" }
+		local toneMap = { success = "SuccessColor", warn = "WarningColor", error = "DestructiveColor", info = "InfoColor" }
 		local tone = toneMap[data.Type or ""] or "AccentColor"
 		local frame = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BorderSizePixel = 0,
@@ -26,7 +26,7 @@ function Notifications.Init(Lib)
 		local head = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 14),
 			BackgroundTransparency = 1, Text = data.Title or Lib.Name,
 			TextSize = 11, TextXAlignment = Enum.TextXAlignment.Left, Parent = frame })
-		T.Register(head, { TextColor3 = tone, Font = "FontBold" })
+		T.Register(head, { TextColor3 = tone, Font = "Font" })
 		local body = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1,
 			Text = tostring(data.Text or ""), TextSize = 11, TextWrapped = true,

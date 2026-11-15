@@ -4,10 +4,11 @@ function Controls.Init(l)
 	Lib = l
 	Lib.Controls = Controls
 	local U, T = Lib.Utility, Lib.Theme
+	local touch = U.IsTouch
 	local btn = U.New("TextButton", { Name = "UGeT_Toggle",
 		AnchorPoint = Vector2.new(1, 0),
 		Position = UDim2.new(1, -80, 0, 14),
-		Size = U.IsTouch and UDim2.fromOffset(90, 36) or UDim2.fromOffset(72, 28),
+		Size = touch and UDim2.fromOffset(90, 36) or UDim2.fromOffset(72, 28),
 		Text = "", AutoButtonColor = false, BorderSizePixel = 0, ZIndex = 60,
 		Parent = Lib.ScreenGui },
 		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
@@ -17,8 +18,8 @@ function Controls.Init(l)
 	Controls.Button = btn
 	local label = U.New("TextLabel", { Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1, Text = "toggle",
-		TextSize = U.IsTouch and 12 or 11, Parent = btn })
-	T.Register(label, { TextColor3 = "FontColor", Font = "FontBold" })
+		TextSize = touch and 12 or 11, Parent = btn })
+	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
 	local function render()
 		local on = Lib.Toggled
 		btn.UIStroke.Color = on and T.Current.AccentColor or T.Current.OutlineColor

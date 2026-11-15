@@ -26,8 +26,8 @@ function Video.Create(Lib, section, cfg)
 			TextSize = 12, AutoButtonColor = false, BorderSizePixel = 0, Parent = controls },
 			{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
 			  U.New("UIStroke", { Thickness = 1 }) })
-		T.Register(b, { BackgroundColor3 = "Surface", TextColor3 = "Text", Font = "FontBold" })
-		T.Register(b.UIStroke, { Color = "Stroke" })
+		T.Register(b, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+		T.Register(b.UIStroke, { Color = "OutlineColor" })
 		Lib:Connect(b.Activated, fn)
 		return b
 	end

@@ -7,11 +7,12 @@ function Keybind.Create(Lib, section, flagName, cfg)
 	flag.Mode = cfg.Mode or "Toggle"
 	local modes = { "Toggle", "Hold", "Press" }
 	flag.State = false
-	local rowH = U.IsTouch and 40 or 30
+	local touch = U.IsTouch
+	local rowH = touch and 40 or 30
 	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
 		BackgroundTransparency = 1, Parent = section.Body })
 	local label = U.New("TextLabel", { Size = UDim2.new(1, -110, 1, 0),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = touch and 13 or 12,
 		TextXAlignment = Enum.TextXAlignment.Left, Parent = row })
 	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
 	local modeBtn = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),

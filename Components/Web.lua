@@ -13,24 +13,24 @@ function Web.Create(Lib, section, cfg)
 		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10),
 			PaddingTop = UDim.new(0, 8), PaddingBottom = UDim.new(0, 8) }),
 		  U.New("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }) })
-	T.Register(row, { BackgroundColor3 = "Surface" })
-	T.Register(row.UIStroke, { Color = "Stroke" })
+	T.Register(row, { BackgroundColor3 = "MainColor" })
+	T.Register(row.UIStroke, { Color = "OutlineColor" })
 
 	local title = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 16),
 		BackgroundTransparency = 1, Text = cfg.Title or "Website", TextSize = 13,
 		TextXAlignment = Enum.TextXAlignment.Left, LayoutOrder = 1, Parent = row })
-	T.Register(title, { TextColor3 = "Text", Font = "FontBold" })
+	T.Register(title, { TextColor3 = "FontColor", Font = "Font" })
 	local url = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 14),
 		BackgroundTransparency = 1, Text = obj.Url, TextSize = 11,
 		TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
 		LayoutOrder = 2, Parent = row })
-	T.Register(url, { TextColor3 = "Accent", Font = "Font" })
+	T.Register(url, { TextColor3 = "AccentColor", Font = "Font" })
 	if cfg.Description then
 		local desc = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1,
 			Text = cfg.Description, TextSize = 11, TextWrapped = true,
 			TextXAlignment = Enum.TextXAlignment.Left, LayoutOrder = 3, Parent = row })
-		T.Register(desc, { TextColor3 = "SubText", Font = "Font" })
+		T.Register(desc, { TextColor3 = "SubTextColor", Font = "Font" })
 	end
 
 	local buttons = U.New("Frame", { Size = UDim2.new(1, 0, 0, 26),
@@ -42,8 +42,8 @@ function Web.Create(Lib, section, cfg)
 			TextSize = 11, AutoButtonColor = false, BorderSizePixel = 0, Parent = buttons },
 			{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }),
 			  U.New("UIStroke", { Thickness = 1 }) })
-		T.Register(b, { BackgroundColor3 = "Card", TextColor3 = "Text", Font = "FontBold" })
-		T.Register(b.UIStroke, { Color = "Stroke" })
+		T.Register(b, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+		T.Register(b.UIStroke, { Color = "OutlineColor" })
 		Lib:Connect(b.Activated, fn)
 		return b
 	end

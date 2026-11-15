@@ -135,24 +135,24 @@ local function buildBar()
 		BorderSizePixel = 0, ZIndex = 40, Visible = false, Parent = Lib.ScreenGui },
 		{ U.New("UICorner", { CornerRadius = UDim.new(0, 10) }),
 		  U.New("UIStroke", { Thickness = 1 }) })
-	T.Register(bar, { BackgroundColor3 = "Surface" })
-	T.Register(bar.UIStroke, { Color = "Stroke" })
+	T.Register(bar, { BackgroundColor3 = "MainColor" })
+	T.Register(bar.UIStroke, { Color = "OutlineColor" })
 
 	ui.Cover = U.New("ImageLabel", { Size = UDim2.fromOffset(40, 40),
 		Position = UDim2.new(0, 8, 0.5, -20), BackgroundTransparency = 1,
 		ScaleType = Enum.ScaleType.Crop, Parent = bar },
 		{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }) })
-	T.Register(ui.Cover, { BackgroundColor3 = "Card" })
+	T.Register(ui.Cover, { BackgroundColor3 = "MainColor" })
 	ui.Title = U.New("TextLabel", { Size = UDim2.new(0, 150, 0, 16),
 		Position = UDim2.new(0, 56, 0, 10), BackgroundTransparency = 1, Text = "No track",
 		TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left,
 		TextTruncate = Enum.TextTruncate.AtEnd, Parent = bar })
-	T.Register(ui.Title, { TextColor3 = "Text", Font = "FontBold" })
+	T.Register(ui.Title, { TextColor3 = "FontColor", Font = "Font" })
 	ui.Artist = U.New("TextLabel", { Size = UDim2.new(0, 150, 0, 14),
 		Position = UDim2.new(0, 56, 0, 28), BackgroundTransparency = 1, Text = "",
 		TextSize = 10, TextXAlignment = Enum.TextXAlignment.Left,
 		TextTruncate = Enum.TextTruncate.AtEnd, Parent = bar })
-	T.Register(ui.Artist, { TextColor3 = "SubText", Font = "Font" })
+	T.Register(ui.Artist, { TextColor3 = "SubTextColor", Font = "Font" })
 
 	local function barBtn(text, x, w, fn)
 		local b = U.New("TextButton", { Size = UDim2.fromOffset(w, 28),
@@ -160,8 +160,8 @@ local function buildBar()
 			AutoButtonColor = false, BorderSizePixel = 0, Parent = bar },
 			{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }),
 			  U.New("UIStroke", { Thickness = 1 }) })
-		T.Register(b, { BackgroundColor3 = "Card", TextColor3 = "Text", Font = "FontBold" })
-		T.Register(b.UIStroke, { Color = "Stroke" })
+		T.Register(b, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+		T.Register(b.UIStroke, { Color = "OutlineColor" })
 		Lib:Connect(b.Activated, fn)
 		return b
 	end
@@ -184,10 +184,10 @@ local function buildBar()
 	local prog = U.New("Frame", { Size = UDim2.new(1, -16, 0, 3),
 		Position = UDim2.new(0, 8, 1, -6), BorderSizePixel = 0, Parent = bar },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	T.Register(prog, { BackgroundColor3 = "Card" })
+	T.Register(prog, { BackgroundColor3 = "MainColor" })
 	ui.ProgFill = U.New("Frame", { Size = UDim2.fromScale(0, 1), BorderSizePixel = 0,
 		Parent = prog }, { U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	T.Register(ui.ProgFill, { BackgroundColor3 = "Accent" })
+	T.Register(ui.ProgFill, { BackgroundColor3 = "AccentColor" })
 	U.TrackDrag(Lib, prog, function(x)
 		if sound and sound.TimeLength > 0 then
 			sound.TimePosition = x * sound.TimeLength
@@ -228,7 +228,7 @@ function MusicPlayer.BuildTab(tab)
 			state.Volume = v / 100
 			if sound then sound.Volume = state.Volume end
 		end })
-	player:AddButton({ Text = "Play / Pause", Variant = "Accent", Func = function() MusicPlayer.TogglePlay() end })
+	player:AddButton({ Text = "Play / Pause", Variant = "AccentColor", Func = function() MusicPlayer.TogglePlay() end })
 	player:AddButton({ Text = "Previous", Func = function() MusicPlayer.Prev() end })
 		:AddButton({ Text = "Next", Func = function() MusicPlayer.Next() end })
 
@@ -236,7 +236,7 @@ function MusicPlayer.BuildTab(tab)
 	add:AddInput("music_title", { Text = "Title", Placeholder = "song name", Finished = true })
 	add:AddDropdown("music_source", { Text = "Source", Values = { "Roblox", "Spotify", "YouTube" }, Default = 1 })
 	add:AddInput("music_value", { Text = "Audio ID / URL", Placeholder = "Roblox id or link", Finished = true })
-	add:AddButton({ Text = "Add to playlist", Variant = "Accent", Func = function()
+	add:AddButton({ Text = "Add to playlist", Variant = "AccentColor", Func = function()
 		local title = Lib.Flags.music_title.Value
 		local source = Lib.Flags.music_source.Value or "Roblox"
 		local value = Lib.Flags.music_value.Value
@@ -262,7 +262,7 @@ function MusicPlayer.BuildTab(tab)
 			end
 		end
 	end })
-	list:AddButton({ Text = "Remove selected", Variant = "Danger", Func = function()
+	list:AddButton({ Text = "Remove selected", Variant = "DestructiveColor", Func = function()
 		local name = Lib.Flags.music_pick.Value
 		if not name then return end
 		for i, tr in ipairs(state.Playlist) do

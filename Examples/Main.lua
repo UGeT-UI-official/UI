@@ -14,10 +14,10 @@ Main:AddButton("Test Button", function()
 	print("UGeT")
 	Library:Notify({ Title = "Button", Text = "UGeT 動作中", Type = "success" })
 end)
-Main:AddButton({ Text = "Accent Button", Variant = "Accent", Func = function()
+Main:AddButton({ Text = "Accent Button", Variant = "AccentColor", Func = function()
 	Library:Notify({ Text = "Accent!", Type = "info" })
 end })
-Main:AddButton({ Text = "Danger (2-click)", Variant = "Danger", DoubleClick = true, Func = function()
+Main:AddButton({ Text = "Danger (2-click)", Variant = "DestructiveColor", DoubleClick = true, Func = function()
 	Library:Notify({ Text = "確認済みアクション", Type = "warn" })
 end })
 
@@ -71,7 +71,7 @@ site:AddWebLink({
 })
 local bridge = WebTab:AddSection("HTTP Bridge", "Right")
 bridge:AddInput("uget_api_url", { Text = "API URL", Placeholder = "https://.../api/...", Finished = true })
-bridge:AddButton({ Text = "GET", Variant = "Accent", Func = function()
+bridge:AddButton({ Text = "GET", Variant = "AccentColor", Func = function()
 	local url = Library.Flags.uget_api_url.Value
 	if url == "" then return end
 	task.spawn(function()
@@ -93,7 +93,7 @@ Library.Flags.uget_menu_key.OnChanged:Connect(function()
 	local k = Library.Flags.uget_menu_key.Value
 	if k ~= "None" then Library:SetToggleKey(k) end
 end)
-sys:AddButton({ Text = "Unload UGeT", Variant = "Danger", DoubleClick = true, Func = function()
+sys:AddButton({ Text = "Unload UGeT", Variant = "DestructiveColor", DoubleClick = true, Func = function()
 	Library:Destroy()
 end })
 

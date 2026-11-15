@@ -6,13 +6,14 @@ function Button.Create(Lib, section, a, b, ...)
 	local colors = {
 		Primary = { bg = "FontColor", fg = "BackgroundColor", stroke = "FontColor" },
 		Secondary = { bg = "MainColor", fg = "FontColor", stroke = "OutlineColor" },
-		Destructive = { bg = "DestructiveColor", fg = "WhiteColor", stroke = "DestructiveColor" },
+		Destructive = { bg = "DestructiveColor", fg = "FontColor", stroke = "DestructiveColor" },
 		Ghost = { bg = "BackgroundColor", fg = "FontColor", stroke = "BackgroundColor" },
 		Accent = { bg = "AccentColor", fg = "BackgroundColor", stroke = "AccentColor" },
-		Danger = { bg = "DestructiveColor", fg = "WhiteColor", stroke = "DestructiveColor" },
+		Danger = { bg = "DestructiveColor", fg = "FontColor", stroke = "DestructiveColor" },
 	}
 	local c = colors[variant] or colors.Secondary
-	local rowH = U.IsTouch and 36 or 28
+	local touch = U.IsTouch
+	local rowH = touch and 36 or 28
 	local row = U.New("TextButton", { Size = UDim2.new(1, 0, 0, rowH), Text = "",
 		AutoButtonColor = false, BorderSizePixel = 0, Parent = section.Body },
 		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
@@ -21,7 +22,7 @@ function Button.Create(Lib, section, a, b, ...)
 	T.Register(row, { BackgroundColor3 = c.bg })
 	T.Register(row.UIStroke, { Color = c.stroke })
 	local label = U.New("TextLabel", { Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
-		Text = cfg.Text or "Button", TextSize = U.IsTouch and 13 or 12, Parent = row })
+		Text = cfg.Text or "Button", TextSize = touch and 13 or 12, Parent = row })
 	T.Register(label, { TextColor3 = c.fg, Font = "Font" })
 	local armed, lastClick = false, 0
 	Lib:Connect(row.MouseEnter, function()

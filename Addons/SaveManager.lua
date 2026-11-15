@@ -124,7 +124,7 @@ function SaveManager:BuildSection(section)
 	local function refresh() listDD:SetValues(self:GetList()) end
 
 	section:AddButton({ Text = "Refresh list", Func = refresh })
-	section:AddButton({ Text = "Save", Variant = "Accent", Func = function()
+	section:AddButton({ Text = "Save", Variant = "AccentColor", Func = function()
 		local n = nameInput.Value ~= "" and nameInput.Value or "default"
 		self:Save(n)
 		refresh()
@@ -133,7 +133,7 @@ function SaveManager:BuildSection(section)
 		local n = listDD.Value or nameInput.Value
 		if n and n ~= "" then self:Load(n) end
 	end })
-	section:AddButton({ Text = "Delete", Variant = "Danger", DoubleClick = true, Func = function()
+	section:AddButton({ Text = "Delete", Variant = "DestructiveColor", DoubleClick = true, Func = function()
 		if listDD.Value then self:Delete(listDD.Value) refresh() end
 	end })
 	section:AddButton({ Text = "Set autoload", Func = function()

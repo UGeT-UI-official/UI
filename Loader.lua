@@ -63,7 +63,7 @@ Library.Enhance.BuildSettings(Settings:AddSection("Controls"))
 Library.SaveManager:SetFolder("UGeT-UI")
 Library.SaveManager:BuildSection(Settings:AddSection("Config", "Right"))
 local sys = Settings:AddSection("System", "Right")
-sys:AddButton({ Text = "Unload UGeT", Variant = "Danger", DoubleClick = true, Func = function()
+sys:AddButton({ Text = "Unload UGeT", Variant = "DestructiveColor", DoubleClick = true, Func = function()
 	Library:Destroy()
 end })
 

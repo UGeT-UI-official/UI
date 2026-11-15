@@ -4,7 +4,8 @@ function Toggle.Create(Lib, section, flagName, cfgOrBool, fn)
 	local cfg = type(cfgOrBool) == "table" and cfgOrBool or { Default = cfgOrBool, Callback = fn, Text = flagName }
 	local flag = U.Flag(Lib, flagName, "Toggle", cfg.Default or false)
 	flag.Callback = cfg.Callback or function() end
-	local rowH = U.IsTouch and 36 or 26
+	local touch = U.IsTouch
+	local rowH = touch and 36 or 26
 	local row = U.New("TextButton", { Size = UDim2.new(1, 0, 0, rowH), Text = "",
 		AutoButtonColor = false, BackgroundTransparency = 1, Parent = section.Body })
 	local box = U.New("Frame", { Size = UDim2.fromOffset(14, 14),
@@ -19,9 +20,9 @@ function Toggle.Create(Lib, section, flagName, cfgOrBool, fn)
 	T.Register(check, { BackgroundColor3 = "AccentColor" })
 	local label = U.New("TextLabel", { Size = UDim2.new(1, -22, 1, 0),
 		Position = UDim2.fromOffset(20, 0), BackgroundTransparency = 1,
-		Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		Text = cfg.Text or flagName, TextSize = touch and 13 or 12,
 		TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd, Parent = row })
-	T.Register(label, { TextColor3 = cfg.Risky and "RedColor" or "FontColor", Font = "Font" })
+	T.Register(label, { TextColor3 = cfg.Risky and "DestructiveColor" or "FontColor", Font = "Font" })
 	function flag:SetValue(v)
 		self.Value = v and true or false
 		check.Visible = self.Value

@@ -14,11 +14,12 @@ function Dropdown.Create(Lib, section, flagName, cfg)
 	flag.Callback = cfg.Callback or function() end
 	flag.Values = cfg.Values or {}
 	flag.SpecialType = cfg.SpecialType
-	local rowH = U.IsTouch and 44 or 32
+	local touch = U.IsTouch
+	local rowH = touch and 44 or 32
 	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
 		BackgroundTransparency = 1, Parent = section.Body })
 	local label = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 14),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = touch and 13 or 12,
 		TextXAlignment = Enum.TextXAlignment.Left, Parent = row })
 	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
 	local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 22),
@@ -36,13 +37,13 @@ function Dropdown.Create(Lib, section, flagName, cfg)
 	local chev = U.New("TextLabel", { Size = UDim2.fromOffset(16, 1),
 		Position = UDim2.new(1, -18, 0.5, 0), BackgroundTransparency = 1,
 		Text = "▾", TextSize = 12, Parent = btn })
-	T.Register(chev, { TextColor3 = "SubText", Font = "Font" })
+	T.Register(chev, { TextColor3 = "SubTextColor", Font = "Font" })
 	local menu
 	local function render()
 		if multi then
-			if #flag.Value == 0 then display.Text = "None"
+			if #flag.Value == 0 then display.Text = "なし"
 			elseif #flag.Value == 1 then display.Text = tostring(flag.Value[1])
-			else display.Text = #flag.Value .. " selected" end
+			else display.Text = #flag.Value .. " 選択中" end
 		else
 			display.Text = tostring(flag.Value or "")
 		end

@@ -12,8 +12,8 @@ function Viewport.Build(Lib, parent, cfg)
 		BorderSizePixel = 0, ClipsDescendants = true, Parent = parent },
 		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
 		  U.New("UIStroke", { Thickness = 1 }) })
-	T.Register(wrap, { BackgroundColor3 = "Background" })
-	T.Register(wrap.UIStroke, { Color = "StrokeSoft" })
+	T.Register(wrap, { BackgroundColor3 = "BackgroundColor" })
+	T.Register(wrap.UIStroke, { Color = "OutlineColor" })
 
 	local vf = U.New("ViewportFrame", { Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1, Ambient = Color3.fromRGB(180, 180, 180),
