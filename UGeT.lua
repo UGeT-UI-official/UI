@@ -3519,7 +3519,7 @@ Library.SaveManager:SetFolder("UGeT")
 Library.SaveManager:BuildSection(Settings:AddSection("Config","Right"))
 local sys = Settings:AddSection("System","Right")
 sys:AddButton({Text="Copy loader",Func=function()
-	local line='loadstring(game:HttpGet("https://raw.githubusercontent.com/UGeT/UI/main/UGeT.lua"))()'
+	local line='loadstring(game:HttpGet("https://raw.githubusercontent.com/UGeT-UI-official/UI/main/UGeT.lua"))()'
 	if Library.Utility.Clipboard(line) then Library:Notify({Text="Loader copied",Type="success",Time=2})
 	else Library:Notify({Text=line,Type="info",Time=8}) end
 end})
