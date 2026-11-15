@@ -25,6 +25,11 @@ function Library.Use(modules)
 end
 
 function Library:Connect(signal, fn)
+	local ty = typeof(signal)
+	if ty == "RBXScriptConnection" or (type(signal) == "table" and signal.Disconnect and not signal.Connect) then
+		self.Maid:Give(signal)
+		return signal
+	end
 	local c = signal:Connect(fn)
 	self.Maid:Give(c)
 	return c

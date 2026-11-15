@@ -7,7 +7,7 @@ function Button.Create(Lib, section, textOrCfg, fn)
 	local obj = { Type = "Button" }
 	local confirming = false
 
-	local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 32),
+	local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, U.IsTouch and 40 or 32),
 		Text = cfg.Text or "Button", TextSize = 13, AutoButtonColor = false,
 		BorderSizePixel = 0, Parent = section.Body },
 		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
