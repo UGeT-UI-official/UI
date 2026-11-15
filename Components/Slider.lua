@@ -1,4 +1,3 @@
--- UGeT | Slider: drag track + tap-to-type value + fine steppers
 local Slider = {}
 function Slider.Create(Lib, section, flagName, cfg)
 	local U, T = Lib.Utility, Lib.Theme
@@ -10,57 +9,48 @@ function Slider.Create(Lib, section, flagName, cfg)
 	local flag = U.Flag(Lib, flagName, "Slider", cfg.Default or min)
 	flag.Callback = cfg.Callback or function() end
 	flag.Min, flag.Max, flag.Step = min, max, step
-	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, 44),
+	local rowH = U.IsTouch and 44 or 34
+	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
 		BackgroundTransparency = 1, Parent = section.Body })
-	local label = U.New("TextLabel", { Size = UDim2.new(1, -150, 0, 18),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = 13,
-		TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
-		Parent = row })
-	T.Register(label, { TextColor3 = "Text", Font = "Font" })
-	local function stepBtn(text, xOff, fn)
-		local b = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0),
-			Position = UDim2.new(1, xOff, 0, 0), Size = UDim2.fromOffset(22, 18),
-			Text = text, TextSize = 13, AutoButtonColor = false, BorderSizePixel = 0, Parent = row },
-			{ U.New("UICorner", { CornerRadius = UDim.new(0, 5) }),
-			  U.New("UIStroke", { Thickness = 1 }) })
-		T.Register(b, { BackgroundColor3 = "Surface", TextColor3 = "SubText", Font = "FontBold" })
-		T.Register(b.UIStroke, { Color = "Stroke" })
-		Lib:Connect(b.MouseEnter, function() U.Tween(b.UIStroke, 0.1, { Color = T.Current.Accent }) end)
-		Lib:Connect(b.MouseLeave, function() U.Tween(b.UIStroke, 0.1, { Color = T.Current.Stroke }) end)
-		Lib:Connect(b.Activated, fn)
-		return b
-	end
-	stepBtn("-", -88, function() flag:SetValue(flag.Value - step) end)
-	stepBtn("+", 0, function() flag:SetValue(flag.Value + step) end)
-	local valueBtn = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -26, 0, 0), Size = UDim2.fromOffset(60, 18),
-		Text = "", TextSize = 12, AutoButtonColor = false, BackgroundTransparency = 1,
-		TextXAlignment = Enum.TextXAlignment.Center, Parent = row })
-	T.Register(valueBtn, { TextColor3 = "Accent", Font = "FontBold" })
-	local valueBox = U.New("TextBox", { AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -26, 0, 0), Size = UDim2.fromOffset(60, 18), Text = "",
-		TextSize = 12, Visible = false, ClearTextOnFocus = false,
-		TextXAlignment = Enum.TextXAlignment.Center, BorderSizePixel = 0, Parent = row },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 4) }) })
-	T.Register(valueBox, { BackgroundColor3 = "Surface", TextColor3 = "Text", Font = "Font" })
-	local track = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 18),
-		Position = UDim2.new(0, 0, 0, 24), Text = "", AutoButtonColor = false,
+	local labelRow = U.New("Frame", { Size = UDim2.new(1, 0, 0, 16),
 		BackgroundTransparency = 1, Parent = row })
-	local bar = U.New("Frame", { Size = UDim2.new(1, 0, 0, 6),
-		Position = UDim2.new(0, 0, 0.5, -3), BorderSizePixel = 0, Parent = track },
+	local label = U.New("TextLabel", { Size = UDim2.new(1, -60, 1, 0),
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		TextXAlignment = Enum.TextXAlignment.Left, Parent = labelRow })
+	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
+	local valueBtn = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(56, 16),
+		Text = "", TextSize = 11, AutoButtonColor = false, BorderSizePixel = 0, Parent = labelRow },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+		  U.New("UIStroke", { Thickness = 1 }) })
+	T.Register(valueBtn, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+	T.Register(valueBtn.UIStroke, { Color = "OutlineColor" })
+	local valueBox = U.New("TextBox", { AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(56, 16), Text = "",
+		TextSize = 11, Visible = false, ClearTextOnFocus = false,
+		TextXAlignment = Enum.TextXAlignment.Center, BorderSizePixel = 0, Parent = labelRow },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+		  U.New("UIStroke", { Thickness = 1 }) })
+	T.Register(valueBox, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+	T.Register(valueBox.UIStroke, { Color = "OutlineColor" })
+	local track = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 14),
+		Position = UDim2.new(0, 0, 1, -14), Text = "", AutoButtonColor = false,
+		BackgroundTransparency = 1, Parent = row })
+	local bar = U.New("Frame", { Size = UDim2.new(1, 0, 0, 4),
+		Position = UDim2.new(0, 0, 0.5, -2), BorderSizePixel = 0, Parent = track },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	T.Register(bar, { BackgroundColor3 = "Surface" })
-	T.Register(U.New("UIStroke", { Thickness = 1, Parent = bar }), { Color = "StrokeSoft" })
+	T.Register(bar, { BackgroundColor3 = "MainColor" })
+	T.Register(U.New("UIStroke", { Thickness = 1, Parent = bar }), { Color = "OutlineColor" })
 	local fill = U.New("Frame", { Size = UDim2.fromScale(0, 1), BorderSizePixel = 0,
 		Parent = bar }, { U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	T.Register(fill, { BackgroundColor3 = "Accent" })
-	local knob = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
-		Size = UDim2.fromOffset(14, 14), Position = UDim2.fromScale(0, 0.5),
+	T.Register(fill, { BackgroundColor3 = "AccentColor" })
+	local thumb = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
+		Size = UDim2.fromOffset(10, 10), Position = UDim2.fromScale(0, 0.5),
 		BorderSizePixel = 0, ZIndex = 2, Parent = bar },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-		  U.New("UIStroke", { Thickness = 2 }) })
-	T.Register(knob, { BackgroundColor3 = "Text" })
-	T.Register(knob.UIStroke, { Color = "Accent" })
+		  U.New("UIStroke", { Thickness = 1 }) })
+	T.Register(thumb, { BackgroundColor3 = "AccentColor" })
+	T.Register(thumb.UIStroke, { Color = "BackgroundColor" })
 	local function fmt(v)
 		local s = rounding == 0 and tostring(math.floor(v)) or string.format("%." .. rounding .. "f", v)
 		return s .. (cfg.Suffix or "")
@@ -71,10 +61,10 @@ function Slider.Create(Lib, section, flagName, cfg)
 		local ratio = (v - self.Min) / math.max(self.Max - self.Min, 1e-9)
 		if instant then
 			fill.Size = UDim2.fromScale(ratio, 1)
-			knob.Position = UDim2.fromScale(ratio, 0.5)
+			thumb.Position = UDim2.fromScale(ratio, 0.5)
 		else
-			U.Tween(fill, 0.08, { Size = UDim2.fromScale(ratio, 1) }, Enum.EasingStyle.Linear)
-			U.Tween(knob, 0.08, { Position = UDim2.fromScale(ratio, 0.5) }, Enum.EasingStyle.Linear)
+			U.Tween(fill, 0.08, { Size = UDim2.fromScale(ratio, 1) })
+			U.Tween(thumb, 0.08, { Position = UDim2.fromScale(ratio, 0.5) })
 		end
 		valueBtn.Text = fmt(v)
 		self.OnChanged:Fire(v)

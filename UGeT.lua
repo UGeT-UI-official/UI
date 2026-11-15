@@ -227,55 +227,32 @@ M.Theme = (function()
 local Theme = {}
 local Lib
 Theme.Current = {
-	Background = Color3.fromRGB(0, 0, 0),
-	Surface    = Color3.fromRGB(9, 8, 8),
-	Card       = Color3.fromRGB(16, 16, 16),
-	Stroke     = Color3.fromRGB(38, 38, 38),
-	StrokeSoft = Color3.fromRGB(26, 26, 26),
-	Accent     = Color3.fromRGB(255, 255, 255),
-	AccentSoft = Color3.fromRGB(48, 48, 48),
-	Text       = Color3.fromRGB(255, 255, 255),
-	SubText    = Color3.fromRGB(150, 150, 150),
-	Danger     = Color3.fromRGB(255, 50, 50),
-	Success    = Color3.fromRGB(0, 210, 80),
-	Warning    = Color3.fromRGB(255, 196, 84),
-	Info       = Color3.fromRGB(102, 180, 255),
-	Font       = Enum.Font.Gotham,
-	FontBold   = Enum.Font.GothamBlack,
+	BackgroundColor = Color3.fromRGB(0, 0, 0),
+	MainColor       = Color3.fromRGB(9, 8, 8),
+	AccentColor     = Color3.fromRGB(255, 255, 255),
+	OutlineColor    = Color3.fromRGB(38, 38, 38),
+	FontColor       = Color3.new(1, 1, 1),
+	RedColor        = Color3.fromRGB(255, 50, 50),
+	DestructiveColor = Color3.fromRGB(220, 38, 38),
+	DarkColor       = Color3.new(0, 0, 0),
+	WhiteColor      = Color3.new(1, 1, 1),
+	Font            = Enum.Font.GothamBlack,
+	Background      = Color3.fromRGB(0, 0, 0),
+	Surface         = Color3.fromRGB(9, 8, 8),
+	Card            = Color3.fromRGB(14, 14, 14),
+	Stroke          = Color3.fromRGB(38, 38, 38),
+	StrokeSoft      = Color3.fromRGB(26, 26, 26),
+	Accent          = Color3.fromRGB(255, 255, 255),
+	AccentSoft      = Color3.fromRGB(48, 48, 48),
+	Text            = Color3.fromRGB(255, 255, 255),
+	SubText         = Color3.fromRGB(150, 150, 150),
+	Danger          = Color3.fromRGB(255, 50, 50),
+	Success         = Color3.fromRGB(0, 210, 80),
+	Warning         = Color3.fromRGB(255, 196, 84),
+	Info            = Color3.fromRGB(102, 180, 255),
+	FontBold        = Enum.Font.GothamBlack,
 }
-Theme.Presets = {
-	Obsidian = table.clone(Theme.Current),
-	UGeT = { Background = Color3.fromRGB(11,13,17), Surface = Color3.fromRGB(17,20,26),
-		Card = Color3.fromRGB(23,27,35), Stroke = Color3.fromRGB(44,50,63),
-		StrokeSoft = Color3.fromRGB(33,38,49), Accent = Color3.fromRGB(64,220,180),
-		AccentSoft = Color3.fromRGB(30,68,60), Text = Color3.fromRGB(238,241,246),
-		SubText = Color3.fromRGB(148,156,170) },
-	AMOLED = { Background = Color3.fromRGB(0,0,0), Surface = Color3.fromRGB(8,8,10),
-		Card = Color3.fromRGB(14,14,18), Stroke = Color3.fromRGB(36,36,44),
-		StrokeSoft = Color3.fromRGB(26,26,32), Accent = Color3.fromRGB(64,220,180),
-		AccentSoft = Color3.fromRGB(20,52,46), Text = Color3.fromRGB(240,242,246),
-		SubText = Color3.fromRGB(140,146,158) },
-	Graphite = { Background = Color3.fromRGB(16,17,20), Surface = Color3.fromRGB(22,23,27),
-		Card = Color3.fromRGB(29,31,36), Stroke = Color3.fromRGB(52,55,63),
-		StrokeSoft = Color3.fromRGB(40,42,50), Accent = Color3.fromRGB(210,214,222),
-		AccentSoft = Color3.fromRGB(58,60,68), Text = Color3.fromRGB(240,241,244),
-		SubText = Color3.fromRGB(150,153,162) },
-	Ocean = { Background = Color3.fromRGB(8,12,20), Surface = Color3.fromRGB(13,18,30),
-		Card = Color3.fromRGB(19,25,40), Stroke = Color3.fromRGB(40,50,74),
-		StrokeSoft = Color3.fromRGB(30,38,58), Accent = Color3.fromRGB(110,168,255),
-		AccentSoft = Color3.fromRGB(30,48,84), Text = Color3.fromRGB(232,238,248),
-		SubText = Color3.fromRGB(140,152,176) },
-	Sakura = { Background = Color3.fromRGB(18,12,16), Surface = Color3.fromRGB(25,17,23),
-		Card = Color3.fromRGB(33,23,31), Stroke = Color3.fromRGB(62,44,58),
-		StrokeSoft = Color3.fromRGB(48,34,46), Accent = Color3.fromRGB(255,148,190),
-		AccentSoft = Color3.fromRGB(80,42,60), Text = Color3.fromRGB(246,236,242),
-		SubText = Color3.fromRGB(172,150,164) },
-	Light = { Background = Color3.fromRGB(226,229,234), Surface = Color3.fromRGB(238,240,244),
-		Card = Color3.fromRGB(250,251,253), Stroke = Color3.fromRGB(192,198,208),
-		StrokeSoft = Color3.fromRGB(212,217,225), Accent = Color3.fromRGB(16,150,116),
-		AccentSoft = Color3.fromRGB(186,230,218), Text = Color3.fromRGB(26,30,38),
-		SubText = Color3.fromRGB(100,108,122) },
-}
+Theme.Presets = { Obsidian = table.clone(Theme.Current) }
 Theme.Registry = setmetatable({}, { __mode = "k" })
 function Theme.Init(l) Lib = l Theme.Changed = l.Utility.Signal() end
 function Theme.Register(obj, props)
@@ -333,237 +310,150 @@ return Layout
 
 end)()
 M.Window = (function()
--- UGeT | window: sidebar layout, drag, resize, minimize, pin/lock, status bar
 local Window = {}
 local UIS = game:GetService("UserInputService")
-
 local function ugetViewport()
 	local c = workspace.CurrentCamera
 	return c and c.ViewportSize or Vector2.new(1280,720)
 end
-
 function Window.Create(Lib, cfg)
 	local U = Lib.Utility
 	local T = Lib.Theme
 	local self = { Tabs = {}, ActiveTab = nil, Minimized = false, Destroyed = false }
 	local maid = U.Maid()
 	self._maid = maid
-
 	local vp = ugetViewport()
 	local isTouch = U.IsTouch
-	local w, h
-	if isTouch then
-		w = math.min(vp.X - 24, 470)
-		h = math.min(vp.Y - 90, 560)
-	else
-		w = math.min(cfg.Width or 640, vp.X - 24)
-		h = math.min(cfg.Height or 460, vp.Y - 60)
-	end
+	local w = isTouch and math.min(vp.X - 16, 420) or math.min(cfg.Width or 560, vp.X - 40)
+	local h = isTouch and math.min(vp.Y - 80, 520) or math.min(cfg.Height or 420, vp.Y - 80)
 	self.NormalSize = UDim2.fromOffset(w, h)
-
 	local main = U.New("Frame", {
 		Name = "UGeT_Window", AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5), Size = self.NormalSize,
 		BorderSizePixel = 0, ClipsDescendants = true, ZIndex = 1,
 		Visible = cfg.AutoShow ~= false, Parent = Lib.ScreenGui,
-	}, {
-		U.New("UICorner", { CornerRadius = UDim.new(0, 12) }),
+	}, { U.New("UICorner", { CornerRadius = UDim.new(0, 4) }),
 		U.New("UIStroke", { Thickness = 1 }),
-		U.New("UIScale", { Scale = 0.92 }),
-	})
-	T.Register(main, { BackgroundColor3 = "Surface" })
-	T.Register(main.UIStroke, { Color = "Stroke" })
-	local glow = U.New("UIStroke", { Thickness = 2, Transparency = 0.8, Parent = main }) -- UGET_GLOW
-	T.Register(glow, { Color = "Accent" })
+		U.New("UIScale", { Scale = 0.95 }) })
+	T.Register(main, { BackgroundColor3 = "BackgroundColor" })
+	T.Register(main.UIStroke, { Color = "OutlineColor" })
 	self.Frame = main
-	U.Tween(main.UIScale, 0.28, { Scale = 1 }, Enum.EasingStyle.Back)
-
-	local header = U.New("Frame", { Size = UDim2.new(1, 0, 0, 44),
-		BackgroundTransparency = 1, Parent = main })
-	self.Header = header
-	local logo = U.New("Frame", { Size = UDim2.fromOffset(10, 10),
-		Position = UDim2.new(0, 14, 0.5, -5), BorderSizePixel = 0, Parent = header },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }) })
-	T.Register(logo, { BackgroundColor3 = "Accent" })
-	local title = U.New("TextLabel", { Size = UDim2.new(1, -190, 0, 20),
-		Position = UDim2.fromOffset(32, 6), BackgroundTransparency = 1,
-		Text = cfg.Title or "UGeT", TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left,
-		Parent = header })
-	T.Register(title, { TextColor3 = "Text", Font = "FontBold" })
-	local subtitle = U.New("TextLabel", { Size = UDim2.new(1, -190, 0, 14),
-		Position = UDim2.fromOffset(32, 25), BackgroundTransparency = 1,
-		Text = cfg.Subtitle or "", TextSize = 10, TextXAlignment = Enum.TextXAlignment.Left,
-		Parent = header })
-	T.Register(subtitle, { TextColor3 = "SubText", Font = "Font" })
-	function self:SetTitle(t) title.Text = t end
-	function self:SetSubtitle(t) subtitle.Text = t end
-
-	local function iconButton(xOff, draw)
+	U.Tween(main.UIScale, 0.18, { Scale = 1 })
+	local topbar = U.New("Frame", { Size = UDim2.new(1, 0, 0, 38),
+		BorderSizePixel = 0, Parent = main })
+	T.Register(topbar, { BackgroundColor3 = "BackgroundColor" })
+	self.Header = topbar
+	local bottomLine = U.New("Frame", { Size = UDim2.new(1, 0, 0, 1),
+		Position = UDim2.new(0, 0, 1, 0), BorderSizePixel = 0, Parent = topbar })
+	T.Register(bottomLine, { BackgroundColor3 = "OutlineColor" })
+	local titleHolder = U.New("Frame", { Size = UDim2.new(1, -90, 1, 0),
+		BackgroundTransparency = 1, Parent = topbar },
+		{ U.New("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal,
+			VerticalAlignment = Enum.VerticalAlignment.Center, Padding = UDim.new(0, 8) }),
+		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10) }) })
+	local titleIcon = U.New("TextLabel", { Size = UDim2.fromOffset(20, 20),
+		Text = (cfg.Title or "U"):sub(1,1):upper(), TextSize = 14,
+		BackgroundTransparency = 1, Parent = titleHolder })
+	T.Register(titleIcon, { TextColor3 = "AccentColor", Font = "FontBold" })
+	local titleLabel = U.New("TextLabel", { Size = UDim2.fromScale(0, 1),
+		AutomaticSize = Enum.AutomaticSize.X, BackgroundTransparency = 1,
+		Text = cfg.Title or "UGeT", TextSize = 14,
+		TextXAlignment = Enum.TextXAlignment.Left, Parent = titleHolder })
+	T.Register(titleLabel, { TextColor3 = "FontColor", Font = "FontBold" })
+	local searchBox = U.New("TextBox", { Size = UDim2.new(0, 0, 0, 22),
+		Position = UDim2.new(1, -110, 0.5, -11), Visible = false,
+		Text = "", PlaceholderText = "Search...", TextSize = 11,
+		TextXAlignment = Enum.TextXAlignment.Left, BorderSizePixel = 0, Parent = topbar },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+		  U.New("UIStroke", { Thickness = 1 }),
+		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 6) }) })
+	T.Register(searchBox, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", PlaceholderColor3 = "SubText" })
+	T.Register(searchBox.UIStroke, { Color = "OutlineColor" })
+	local function topBtn(xOff, label)
 		local b = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),
-			Position = UDim2.new(1, xOff, 0.5, 0), Size = UDim2.fromOffset(30, 30),
-			Text = "", AutoButtonColor = false, BackgroundTransparency = 1,
-			BorderSizePixel = 0, Parent = header },
-			{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }) })
-		T.Register(b, { BackgroundColor3 = "Card" })
-		maid:Give(b.MouseEnter:Connect(function() U.Tween(b, 0.12, { BackgroundTransparency = 0 }) end))
-		maid:Give(b.MouseLeave:Connect(function() U.Tween(b, 0.12, { BackgroundTransparency = 1 }) end))
-		draw(b)
+			Position = UDim2.new(1, xOff, 0.5, 0), Size = UDim2.fromOffset(28, 28),
+			Text = label, TextSize = 14, AutoButtonColor = false,
+			BackgroundTransparency = 1, BorderSizePixel = 0, Parent = topbar })
+		T.Register(b, { TextColor3 = "SubText", Font = "Font" })
+		maid:Give(b.MouseEnter:Connect(function() U.Tween(b, 0.1, { TextColor3 = T.Current.FontColor }) end))
+		maid:Give(b.MouseLeave:Connect(function() U.Tween(b, 0.1, { TextColor3 = T.Current.SubText }) end))
 		return b
 	end
-	local function line(parent, w2, h2, pos, rot, colorKey)
-		local f = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
-			Size = UDim2.fromOffset(w2, h2), Position = pos, Rotation = rot or 0,
-			BorderSizePixel = 0, Parent = parent },
-			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-		T.Register(f, { BackgroundColor3 = colorKey or "SubText" })
-		return f
-	end
-
-	local closeBtn = iconButton(-10, function(b)
-		line(b, 13, 1.6, UDim2.fromScale(0.5, 0.5), 45)
-		line(b, 13, 1.6, UDim2.fromScale(0.5, 0.5), -45)
-	end)
-	local minBtn = iconButton(-46, function(b)
-		line(b, 12, 1.6, UDim2.fromScale(0.5, 0.5), 0)
-	end)
-	local pinBtn = iconButton(-82, function(b) end)
-	local pinHead = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.42), Size = UDim2.fromOffset(9, 9),
-		BackgroundTransparency = 1, BorderSizePixel = 0, Parent = pinBtn },
-		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-		  U.New("UIStroke", { Thickness = 1.6 }) })
-	T.Register(pinHead.UIStroke, { Color = "SubText" })
-	local pinNeedle = line(pinBtn, 1.6, 7, UDim2.fromScale(0.5, 0.68), 0)
-	self.PinParts = { Head = pinHead.UIStroke, Needle = pinNeedle }
-
-	local sidebar = U.New("Frame", { Size = UDim2.new(0, 170, 1, -68),
-		Position = UDim2.fromOffset(0, 44), BorderSizePixel = 0, Parent = main }, {
-		U.New("UIPadding", { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8),
+	local closeBtn = topBtn(-6, "×")
+	local minBtn = topBtn(-34, "−")
+	local sidebar = U.New("ScrollingFrame", { Size = UDim2.new(0, isTouch and 48 or 150, 1, -38),
+		Position = UDim2.fromOffset(0, 38), BorderSizePixel = 0, ScrollBarThickness = 0,
+		CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y, Parent = main },
+		{ U.New("UIPadding", { PaddingLeft = UDim.new(0, 6), PaddingRight = UDim.new(0, 6),
 			PaddingTop = UDim.new(0, 8), PaddingBottom = UDim.new(0, 8) }),
-		U.New("UIListLayout", { Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder }),
-	})
-	T.Register(sidebar, { BackgroundColor3 = "Background" })
+		  U.New("UIListLayout", { Padding = UDim.new(0, 3), SortOrder = Enum.SortOrder.LayoutOrder }) })
+	T.Register(sidebar, { BackgroundColor3 = "BackgroundColor" })
 	self.Sidebar = sidebar
-
-	local pages = U.New("Frame", { Size = UDim2.new(1, -170, 1, -68),
-		Position = UDim2.fromOffset(170, 44), BackgroundTransparency = 1,
-		ClipsDescendants = true, Parent = main })
+	local sideDivider = U.New("Frame", { Size = UDim2.new(0, 1, 1, -38),
+		Position = UDim2.fromOffset(isTouch and 48 or 150, 38), BorderSizePixel = 0, Parent = main })
+	T.Register(sideDivider, { BackgroundColor3 = "OutlineColor" })
+	local pages = U.New("Frame", { Size = UDim2.new(1, -(isTouch and 48 or 150) - 1, 1, -38),
+		Position = UDim2.fromOffset((isTouch and 48 or 150) + 1, 38),
+		BackgroundTransparency = 1, ClipsDescendants = true, Parent = main })
 	self.Pages = pages
-
-	local status = U.New("Frame", { Size = UDim2.new(1, 0, 0, 24),
-		Position = UDim2.new(0, 0, 1, -24), BorderSizePixel = 0, Parent = main })
-	T.Register(status, { BackgroundColor3 = "Background" })
-	local statusLeft = U.New("TextLabel", { Size = UDim2.new(0.5, -12, 1, 0),
-		Position = UDim2.fromOffset(12, 0), BackgroundTransparency = 1,
-		Text = Lib.Name .. " v" .. Lib.Version, TextSize = 10,
-		TextXAlignment = Enum.TextXAlignment.Left, Parent = status })
-	T.Register(statusLeft, { TextColor3 = "SubText", Font = "Font" })
-	local statusRight = U.New("TextLabel", { Size = UDim2.new(0.5, -12, 1, 0),
-		Position = UDim2.new(0.5, 0, 0, 0), BackgroundTransparency = 1, Text = "",
-		TextSize = 10, TextXAlignment = Enum.TextXAlignment.Right, Parent = status })
-	T.Register(statusRight, { TextColor3 = "SubText", Font = "Font" })
-	self.Status = status
-
-	local fpsAcc, fpsFrames, timer = 0, 0, 0
-	maid:Give(game:GetService("RunService").Heartbeat:Connect(function(dt)
-		fpsAcc = fpsAcc + dt; fpsFrames = fpsFrames + 1; timer = timer + dt
-		if timer >= 0.5 then
-			local fps = math.floor(fpsFrames / math.max(fpsAcc, 1e-9) + 0.5)
-			local lockTag = Lib.Locked and "  [locked]" or ""
-			statusRight.Text = fps .. " fps  -  " .. (self.ActiveTab and self.ActiveTab.Name or "") .. lockTag
-			fpsAcc, fpsFrames, timer = 0, 0, 0
-		end
-	end))
-
-	local function applyLayout()
-		local compact = Lib.Layout.Compact
-		local sw = compact and 52 or 170
-		sidebar.Size = UDim2.new(0, sw, 1, -68)
-		pages.Size = UDim2.new(1, -sw, 1, -68)
-		pages.Position = UDim2.fromOffset(sw, 44)
-		for _, tab in ipairs(self.Tabs) do
-			tab.Label.Visible = not compact
-			tab:ApplyLayout(compact)
-		end
-	end
-	maid:Give(Lib.Layout.Changed:Connect(applyLayout))
-
 	function self:SwitchTab(tab)
 		for _, t in ipairs(self.Tabs) do
 			local on = t == tab
 			t.Page.Visible = on
-			U.Tween(t.Button, 0.15, { BackgroundTransparency = on and 0 or 1 })
-			t.Label.TextColor3 = on and T.Current.Accent or T.Current.SubText
-			t.Icon.TextColor3 = on and T.Current.Accent or T.Current.SubText
-			t.Bar.BackgroundTransparency = on and 0 or 1
+			U.Tween(t.Button, 0.12, { BackgroundTransparency = on and 0 or 1 })
+			t.Label.TextColor3 = on and T.Current.FontColor or T.Current.SubText
+			if t.Icon then t.Icon.TextColor3 = on and T.Current.FontColor or T.Current.SubText end
 		end
 		self.ActiveTab = tab
 		if tab then
 			tab.Page.UIScale.Scale = 0.98
-			U.Tween(tab.Page.UIScale, 0.18, { Scale = 1 })
+			U.Tween(tab.Page.UIScale, 0.15, { Scale = 1 })
 		end
 	end
 	maid:Give(T.Changed:Connect(function()
 		if self.ActiveTab then self:SwitchTab(self.ActiveTab) end
 	end))
-
 	function self:AddTab(name, icon)
 		local tab = Lib.Tab.Create(Lib, self, name)
-		local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, isTouch and 44 or 34), Text = "",
-			AutoButtonColor = false, BackgroundTransparency = 1, BorderSizePixel = 0,
-			Parent = sidebar }, { U.New("UICorner", { CornerRadius = UDim.new(0, 8) }) })
-		T.Register(btn, { BackgroundColor3 = "Card" })
-		local bar = U.New("Frame", { Size = UDim2.new(0, 3, 0, 16),
-			Position = UDim2.new(0, 0, 0.5, -8), BackgroundTransparency = 1,
-			BorderSizePixel = 0, Parent = btn },
-			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-		T.Register(bar, { BackgroundColor3 = "Accent" })
-		local iconLabel = U.New("TextLabel", { Size = UDim2.new(0, 28, 1, 0),
-			Position = UDim2.fromOffset(6, 0), BackgroundTransparency = 1,
-			Text = icon or name:sub(1, 1):upper(), TextSize = 14, Parent = btn })
+		local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, isTouch and 38 or 30),
+			Text = "", AutoButtonColor = false, BackgroundTransparency = 1,
+			BorderSizePixel = 0, Parent = sidebar },
+			{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+			  U.New("UIPadding", { PaddingLeft = UDim.new(0, 8) }) })
+		T.Register(btn, { BackgroundColor3 = "MainColor" })
+		local iconLabel = U.New("TextLabel", { Size = UDim2.fromOffset(isTouch and 32 or 22, 1, 0),
+			Position = UDim2.fromOffset(isTouch and 4 or 0, 0), BackgroundTransparency = 1,
+			Text = icon or name:sub(1,1):upper(), TextSize = isTouch and 14 or 12, Parent = btn })
 		T.Register(iconLabel, { TextColor3 = "SubText", Font = "FontBold" })
-		local label = U.New("TextLabel", { Size = UDim2.new(1, -40, 1, 0),
-			Position = UDim2.fromOffset(38, 0), BackgroundTransparency = 1, Text = name,
-			TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left,
-			TextTruncate = Enum.TextTruncate.AtEnd, Parent = btn })
-		T.Register(label, { TextColor3 = "SubText", Font = "Font" })
-		tab.Button, tab.Bar, tab.Icon, tab.Label = btn, bar, iconLabel, label
+		local label
+		if not isTouch then
+			label = U.New("TextLabel", { Size = UDim2.new(1, -28, 1, 0),
+				Position = UDim2.fromOffset(26, 0), BackgroundTransparency = 1, Text = name,
+				TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left,
+				TextTruncate = Enum.TextTruncate.AtEnd, Parent = btn })
+			T.Register(label, { TextColor3 = "SubText", Font = "Font" })
+		end
+		tab.Button, tab.Icon, tab.Label = btn, iconLabel, label
 		maid:Give(btn.Activated:Connect(function() self:SwitchTab(tab) end))
 		table.insert(self.Tabs, tab)
-		applyLayout()
 		if not self.ActiveTab then self:SwitchTab(tab) end
 		return tab
 	end
-
 	maid:Give(minBtn.Activated:Connect(function()
 		self.Minimized = not self.Minimized
 		sidebar.Visible = not self.Minimized
 		pages.Visible = not self.Minimized
-		status.Visible = not self.Minimized
-		main.Size = self.Minimized and UDim2.new(0, main.AbsoluteSize.X, 0, 44) or self.NormalSize
+		sideDivider.Visible = not self.Minimized
+		main.Size = self.Minimized and UDim2.new(0, main.AbsoluteSize.X, 0, 38) or self.NormalSize
 	end))
-
-	function self:SetLocked(v)
-		Lib.Locked = v and true or false
-		local col = Lib.Locked and T.Current.Accent or T.Current.SubText
-		self.PinParts.Head.Color = col
-		self.PinParts.Needle.BackgroundColor3 = col
-		U.Tween(pinBtn, 0.15, { BackgroundTransparency = Lib.Locked and 0 or 1 })
-	end
-	maid:Give(pinBtn.Activated:Connect(function()
-		self:SetLocked(not Lib.Locked)
-		Lib:Notify({ Text = Lib.Locked and "UI locked (drag/resize off)" or "UI unlocked", Type = "info", Time = 2 })
-	end))
-
 	local armed = false
 	maid:Give(closeBtn.Activated:Connect(function()
 		if armed then Lib:Destroy() return end
 		armed = true
-		Lib:Notify({ Title = "UGeT", Text = "Press X again to close", Type = "warn", Time = 3 })
-		task.delay(3, function() armed = false end)
+		closeBtn.TextColor3 = T.Current.Danger
+		task.delay(2.5, function() armed = false closeBtn.TextColor3 = T.Current.SubText end)
 	end))
-
-	U.Draggable(Lib, main, header, function()
+	U.Draggable(Lib, main, topbar, function()
 		local v = ugetViewport()
 		local half = main.AbsoluteSize / 2
 		local p = main.Position
@@ -572,15 +462,21 @@ function Window.Create(Lib, cfg)
 			p.Y.Scale,
 			math.clamp(p.Y.Offset, half.Y - v.Y * p.Y.Scale + 4, v.Y * (1 - p.Y.Scale) - half.Y - 4))
 	end, true)
-
 	local grip = U.New("TextButton", { AnchorPoint = Vector2.new(1, 1),
-		Position = UDim2.new(1, -3, 1, -3), Size = UDim2.fromOffset(isTouch and 30 or 20, isTouch and 30 or 20),
+		Position = UDim2.new(1, -2, 1, -2),
+		Size = UDim2.fromOffset(isTouch and 26 or 16, isTouch and 26 or 16),
 		Text = "", BackgroundTransparency = 1, AutoButtonColor = false, ZIndex = 5, Parent = main })
-	line(grip, 6, 1.4, UDim2.new(1, -5, 1, -5), -45)
-	line(grip, 11, 1.4, UDim2.new(1, -7, 1, -7), -45)
+	local function gripLine(w2, pos)
+		local f = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
+			Size = UDim2.fromOffset(w2, 1.4), Position = pos, Rotation = -45,
+			BorderSizePixel = 0, Parent = grip },
+			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
+		T.Register(f, { BackgroundColor3 = "SubText" })
+	end
+	gripLine(4, UDim2.new(1, -4, 1, -4))
+	gripLine(7, UDim2.new(1, -6, 1, -6))
 	local resizing, startSize, startInput = false, nil, nil
 	maid:Give(grip.InputBegan:Connect(function(input)
-		if Lib.Locked then return end
 		if input.UserInputType == Enum.UserInputType.MouseButton1
 			or input.UserInputType == Enum.UserInputType.Touch then
 			resizing = true startSize = main.AbsoluteSize startInput = input.Position
@@ -591,37 +487,33 @@ function Window.Create(Lib, cfg)
 			or input.UserInputType == Enum.UserInputType.Touch then resizing = false end
 	end))
 	maid:Give(UIS.InputChanged:Connect(function(input)
-		if not resizing or Lib.Locked then return end
+		if not resizing then return end
 		if input.UserInputType ~= Enum.UserInputType.MouseMovement
 			and input.UserInputType ~= Enum.UserInputType.Touch then return end
 		local v = ugetViewport()
 		local d = input.Position - startInput
 		main.Size = UDim2.fromOffset(
-			math.clamp(startSize.X + d.X, isTouch and 280 or 420, v.X - 16),
-			math.clamp(startSize.Y + d.Y, isTouch and 240 or 300, v.Y - 16))
+			math.clamp(startSize.X + d.X, 340, v.X - 16),
+			math.clamp(startSize.Y + d.Y, 260, v.Y - 16))
 		self.NormalSize = main.Size
 		self.Minimized = false
-		sidebar.Visible = true pages.Visible = true status.Visible = true
+		sidebar.Visible = true pages.Visible = true sideDivider.Visible = true
 	end))
-
 	function self:SetVisible(v)
 		main.Visible = v
 		if v then
-			main.UIScale.Scale = 0.95
-			U.Tween(main.UIScale, 0.2, { Scale = 1 }, Enum.EasingStyle.Back)
+			main.UIScale.Scale = 0.97
+			U.Tween(main.UIScale, 0.15, { Scale = 1 })
 		end
 	end
-
 	function self:Destroy()
 		if self.Destroyed then return end
 		self.Destroyed = true
 		maid:Clean()
 		main:Destroy()
 	end
-
 	return self
 end
-
 return Window
 
 end)()
@@ -637,28 +529,24 @@ local function buildSection(Lib, column, title, tab)
 	local U, T = Lib.Utility, Lib.Theme
 	local card = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BorderSizePixel = 0, Parent = column },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 4) }),
 		  U.New("UIStroke", { Thickness = 1 }) })
-	T.Register(card, { BackgroundColor3 = "Surface" })
-	T.Register(card.UIStroke, { Color = "Stroke" })
-	local head = U.New("TextButton", { AutomaticSize = Enum.AutomaticSize.X,
-		Size = UDim2.fromOffset(0, 16), Position = UDim2.fromOffset(10, -8),
-		Text = "  " .. title .. "  ", TextSize = 12, AutoButtonColor = false,
-		BorderSizePixel = 0, Parent = card })
-	T.Register(head, { BackgroundColor3 = "Background", TextColor3 = "SubText", Font = "FontBold" })
+	T.Register(card, { BackgroundColor3 = "BackgroundColor" })
+	T.Register(card.UIStroke, { Color = "OutlineColor" })
+	local head = U.New("TextLabel", { Size = UDim2.new(0, 0, 0, 14),
+		AutomaticSize = Enum.AutomaticSize.X, Position = UDim2.fromOffset(8, -7),
+		Text = "  " .. (title or "Section") .. "  ", TextSize = 11,
+		BorderSizePixel = 0, Parent = card },
+		{ U.New("UIPadding", { PaddingLeft = UDim.new(0, 4), PaddingRight = UDim.new(0, 4) }) })
+	T.Register(head, { BackgroundColor3 = "BackgroundColor", TextColor3 = "FontColor", Font = "FontBold" })
 	local body = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = card }, {
-		U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10),
-			PaddingTop = UDim.new(0, 12), PaddingBottom = UDim.new(0, 10) }),
-		U.New("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
+		U.New("UIPadding", { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8),
+			PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 8) }),
+		U.New("UIListLayout", { Padding = UDim.new(0, 5), SortOrder = Enum.SortOrder.LayoutOrder }),
 	})
 	local section = { Frame = card, Body = body, Title = title, Header = head,
 		Tab = tab, Flags = {}, Collapsed = false }
-	function section:SetCollapsed(v)
-		self.Collapsed = v and true or false
-		body.Visible = not self.Collapsed
-	end
-	Lib:Connect(head.Activated, function() section:SetCollapsed(not section.Collapsed) end)
 	function section:SetEnabled(v)
 		for _, f in ipairs(self.Flags) do if f.SetEnabled then f:SetEnabled(v) end end
 	end
@@ -668,17 +556,17 @@ local function buildSection(Lib, column, title, tab)
 		end
 	end
 	function section:AddLabel(text, wrapped)
-		local l = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, wrapped and 0 or 18),
+		local l = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, wrapped and 0 or 16),
 			AutomaticSize = wrapped and Enum.AutomaticSize.Y or Enum.AutomaticSize.None,
 			BackgroundTransparency = 1, Text = text, TextSize = 12, TextWrapped = wrapped or false,
 			TextXAlignment = Enum.TextXAlignment.Left, Parent = body })
-		T.Register(l, { TextColor3 = "SubText", Font = "Font" })
+		T.Register(l, { TextColor3 = "FontColor", Font = "Font" })
 		return { Instance = l, SetText = function(_, t) l.Text = t end }
 	end
 	function section:AddParagraph(heading, text)
-		local h = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 16), BackgroundTransparency = 1,
+		local h = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 14), BackgroundTransparency = 1,
 			Text = heading, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = body })
-		T.Register(h, { TextColor3 = "Text", Font = "FontBold" })
+		T.Register(h, { TextColor3 = "FontColor", Font = "FontBold" })
 		local p = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Text = text,
 			TextSize = 11, TextWrapped = true, TextXAlignment = Enum.TextXAlignment.Left, Parent = body })
@@ -686,11 +574,11 @@ local function buildSection(Lib, column, title, tab)
 		return { SetText = function(_, t) p.Text = t end }
 	end
 	function section:AddDivider()
-		local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, 5),
+		local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, 6),
 			BackgroundTransparency = 1, Parent = body })
 		local l = U.New("Frame", { Size = UDim2.new(1, 0, 0, 1),
 			Position = UDim2.new(0, 0, 0.5, 0), BorderSizePixel = 0, Parent = row })
-		T.Register(l, { BackgroundColor3 = "StrokeSoft" })
+		T.Register(l, { BackgroundColor3 = "OutlineColor" })
 	end
 	return section
 end
@@ -703,26 +591,26 @@ function Tab.Create(Lib, window, name)
 		Visible = false, Parent = window.Pages },
 		{ U.New("UIScale", { Scale = 1 }),
 		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10),
-			PaddingTop = UDim.new(0, 12), PaddingBottom = UDim.new(0, 10) }) })
-	T.Register(page, { ScrollBarImageColor3 = "Accent" })
+			PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10) }) })
+	T.Register(page, { ScrollBarImageColor3 = "AccentColor" })
 	self.Page = page
 	local holder = U.New("Frame", { Size = UDim2.new(1, -6, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = page },
 		{ U.New("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal,
-			Padding = UDim.new(0, 10), SortOrder = Enum.SortOrder.LayoutOrder }) })
+			Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }) })
 	self.Holder = holder
 	local function column(order)
-		return U.New("Frame", { Size = UDim2.new(0.5, -5, 0, 0),
+		return U.New("Frame", { Size = UDim2.new(0.5, -4, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1,
 			LayoutOrder = order, Parent = holder },
-			{ U.New("UIListLayout", { Padding = UDim.new(0, 12), SortOrder = Enum.SortOrder.LayoutOrder }) })
+			{ U.New("UIListLayout", { Padding = UDim.new(0, 10), SortOrder = Enum.SortOrder.LayoutOrder }) })
 	end
 	self.Left = column(1)
 	self.Right = column(2)
 	function self:ApplyLayout(compact)
 		holder.UIListLayout.FillDirection = compact
 			and Enum.FillDirection.Vertical or Enum.FillDirection.Horizontal
-		local size = compact and UDim2.new(1, 0, 0, 0) or UDim2.new(0.5, -5, 0, 0)
+		local size = compact and UDim2.new(1, 0, 0, 0) or UDim2.new(0.5, -4, 0, 0)
 		self.Left.Size = size
 		self.Right.Size = size
 	end
@@ -1078,68 +966,51 @@ return Enhance
 
 end)()
 M.Button = (function()
--- UGeT | Button: (text, fn) or ({Text, Func, Variant, DoubleClick})
 local Button = {}
-
-function Button.Create(Lib, section, textOrCfg, fn)
+function Button.Create(Lib, section, a, b, ...)
 	local U, T = Lib.Utility, Lib.Theme
-	local cfg = type(textOrCfg) == "table" and textOrCfg or { Text = textOrCfg, Func = fn }
-	local obj = { Type = "Button" }
-	local confirming = false
-
-	local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, U.IsTouch and 40 or 32),
-		Text = cfg.Text or "Button", TextSize = 13, AutoButtonColor = false,
-		BorderSizePixel = 0, Parent = section.Body },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
-		  U.New("UIStroke", { Thickness = 1 }), U.New("UIScale", { Scale = 1 }) })
-
-	local variant = cfg.Variant
-	if variant == "Accent" then
-		T.Register(btn, { BackgroundColor3 = "Accent", TextColor3 = "Background", Font = "FontBold" })
-		T.Register(btn.UIStroke, { Color = "Accent" })
-	elseif variant == "Danger" then
-		T.Register(btn, { BackgroundColor3 = "Card", TextColor3 = "Danger", Font = "FontBold" })
-		T.Register(btn.UIStroke, { Color = "Danger" })
-	else
-		T.Register(btn, { BackgroundColor3 = "Surface", TextColor3 = "Text", Font = "Font" })
-		T.Register(btn.UIStroke, { Color = "Stroke" })
-	end
-
-	Lib:Connect(btn.MouseEnter, function()
-		U.Tween(btn.UIStroke, 0.12, { Color = T.Current.Accent })
+	local cfg = type(a) == "table" and a or { Text = a, Func = b }
+	local variant = cfg.Variant or "Secondary"
+	local colors = {
+		Primary = { bg = "FontColor", fg = "BackgroundColor", stroke = "FontColor" },
+		Secondary = { bg = "MainColor", fg = "FontColor", stroke = "OutlineColor" },
+		Destructive = { bg = "DestructiveColor", fg = "WhiteColor", stroke = "DestructiveColor" },
+		Ghost = { bg = "BackgroundColor", fg = "FontColor", stroke = "BackgroundColor" },
+		Accent = { bg = "AccentColor", fg = "BackgroundColor", stroke = "AccentColor" },
+		Danger = { bg = "DestructiveColor", fg = "WhiteColor", stroke = "DestructiveColor" },
+	}
+	local c = colors[variant] or colors.Secondary
+	local rowH = U.IsTouch and 36 or 28
+	local row = U.New("TextButton", { Size = UDim2.new(1, 0, 0, rowH), Text = "",
+		AutoButtonColor = false, BorderSizePixel = 0, Parent = section.Body },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+		  U.New("UIStroke", { Thickness = 1 }),
+		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10) }) })
+	T.Register(row, { BackgroundColor3 = c.bg })
+	T.Register(row.UIStroke, { Color = c.stroke })
+	local label = U.New("TextLabel", { Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
+		Text = cfg.Text or "Button", TextSize = U.IsTouch and 13 or 12, Parent = row })
+	T.Register(label, { TextColor3 = c.fg, Font = "Font" })
+	local armed, lastClick = false, 0
+	Lib:Connect(row.MouseEnter, function()
+		U.Tween(row, 0.1, { BackgroundColor3 = T.Current.AccentColor })
+		U.Tween(label, 0.1, { TextColor3 = T.Current.BackgroundColor })
 	end)
-	Lib:Connect(btn.MouseLeave, function()
-		U.Tween(btn.UIStroke, 0.12, {
-			Color = variant == "Accent" and T.Current.Accent
-				or variant == "Danger" and T.Current.Danger or T.Current.Stroke })
+	Lib:Connect(row.MouseLeave, function()
+		U.Tween(row, 0.1, { BackgroundColor3 = T.Current[c.bg] })
+		U.Tween(label, 0.1, { TextColor3 = T.Current[c.fg] })
 	end)
-	Lib:Connect(btn.Activated, function()
-		btn.UIScale.Scale = 0.97
-		U.Tween(btn.UIScale, 0.15, { Scale = 1 }, Enum.EasingStyle.Back)
-		if cfg.DoubleClick and not confirming then
-			confirming = true
-			btn.Text = "Confirm: " .. (cfg.Text or "Button") .. "?"
-			local old = btn.TextColor3
-			btn.TextColor3 = T.Current.Warning
-			task.delay(3, function()
-				if confirming then
-					confirming = false
-					btn.Text = cfg.Text or "Button"
-					btn.TextColor3 = old
-				end
-			end)
-			return
+	Lib:Connect(row.Activated, function()
+		if cfg.DoubleClick then
+			local now = tick()
+			if now - lastClick < 0.5 then armed = true else armed = false end
+			lastClick = now
+			if not armed then return end
 		end
-		confirming = false
-		btn.Text = cfg.Text or "Button"
 		task.spawn(function() pcall(cfg.Func or function() end) end)
 	end)
-
-	function obj:SetText(t) cfg.Text = t btn.Text = t end
-	obj.Instance = btn
-	return obj
+	return { Instance = row, SetText = function(_, t) label.Text = t end }
 end
-
 return Button
 
 end)()
@@ -1150,46 +1021,34 @@ function Toggle.Create(Lib, section, flagName, cfgOrBool, fn)
 	local cfg = type(cfgOrBool) == "table" and cfgOrBool or { Default = cfgOrBool, Callback = fn, Text = flagName }
 	local flag = U.Flag(Lib, flagName, "Toggle", cfg.Default or false)
 	flag.Callback = cfg.Callback or function() end
-	local touch = U.IsTouch
-	local rowH = touch and 44 or 30
-	local sw = touch and 50 or 40
-	local sh = touch and 28 or 22
-	local ks = sh - 6
+	local rowH = U.IsTouch and 36 or 26
 	local row = U.New("TextButton", { Size = UDim2.new(1, 0, 0, rowH), Text = "",
 		AutoButtonColor = false, BackgroundTransparency = 1, Parent = section.Body })
-	local label = U.New("TextLabel", { Size = UDim2.new(1, -(sw + 14), 1, 0),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = touch and 14 or 13,
+	local box = U.New("Frame", { Size = UDim2.fromOffset(14, 14),
+		Position = UDim2.new(0, 0, 0.5, -7), BorderSizePixel = 0, Parent = row },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 2) }),
+		  U.New("UIStroke", { Thickness = 1 }) })
+	T.Register(box, { BackgroundColor3 = "MainColor" })
+	T.Register(box.UIStroke, { Color = "OutlineColor" })
+	local check = U.New("Frame", { Size = UDim2.fromOffset(8, 8),
+		Position = UDim2.fromOffset(3, 3), BorderSizePixel = 0, Visible = false, Parent = box },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 1) }) })
+	T.Register(check, { BackgroundColor3 = "AccentColor" })
+	local label = U.New("TextLabel", { Size = UDim2.new(1, -22, 1, 0),
+		Position = UDim2.fromOffset(20, 0), BackgroundTransparency = 1,
+		Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
 		TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd, Parent = row })
-	T.Register(label, { TextColor3 = cfg.Risky and "Danger" or "Text", Font = "Font" })
-	local pill = U.New("Frame", { AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(sw, sh),
-		BorderSizePixel = 0, Parent = row },
-		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	local knob = U.New("Frame", { Size = UDim2.fromOffset(ks, ks),
-		Position = UDim2.new(0, 3, 0.5, -ks / 2), BorderSizePixel = 0, Parent = pill },
-		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	local function render(v, instant)
-		local kp = v and UDim2.new(1, -ks - 3, 0.5, -ks / 2) or UDim2.new(0, 3, 0.5, -ks / 2)
-		local pc = v and T.Current.Accent or T.Current.Stroke
-		local kc = v and T.Current.Background or T.Current.Text
-		if instant then
-			knob.Position = kp
-			pill.BackgroundColor3 = pc
-			knob.BackgroundColor3 = kc
-		else
-			U.Tween(knob, 0.18, { Position = kp, BackgroundColor3 = kc })
-			U.Tween(pill, 0.18, { BackgroundColor3 = pc })
-		end
-	end
+	T.Register(label, { TextColor3 = cfg.Risky and "RedColor" or "FontColor", Font = "Font" })
 	function flag:SetValue(v)
 		self.Value = v and true or false
-		render(self.Value)
+		check.Visible = self.Value
+		box.UIStroke.Color = self.Value and T.Current.AccentColor or T.Current.OutlineColor
 		self.OnChanged:Fire(self.Value)
 		task.spawn(function() pcall(self.Callback, self.Value) end)
 	end
 	Lib:Connect(row.Activated, function() flag:SetValue(not flag.Value) end)
-	Lib:Connect(T.Changed, function() render(flag.Value, true) end)
-	render(flag.Value, true)
+	Lib:Connect(T.Changed, function() flag:SetValue(flag.Value) end)
+	flag:SetValue(flag.Value)
 	flag.Instance = row
 	return flag
 end
@@ -1197,7 +1056,6 @@ return Toggle
 
 end)()
 M.Slider = (function()
--- UGeT | Slider: drag track + tap-to-type value + fine steppers
 local Slider = {}
 function Slider.Create(Lib, section, flagName, cfg)
 	local U, T = Lib.Utility, Lib.Theme
@@ -1209,57 +1067,48 @@ function Slider.Create(Lib, section, flagName, cfg)
 	local flag = U.Flag(Lib, flagName, "Slider", cfg.Default or min)
 	flag.Callback = cfg.Callback or function() end
 	flag.Min, flag.Max, flag.Step = min, max, step
-	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, 44),
+	local rowH = U.IsTouch and 44 or 34
+	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
 		BackgroundTransparency = 1, Parent = section.Body })
-	local label = U.New("TextLabel", { Size = UDim2.new(1, -150, 0, 18),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = 13,
-		TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
-		Parent = row })
-	T.Register(label, { TextColor3 = "Text", Font = "Font" })
-	local function stepBtn(text, xOff, fn)
-		local b = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0),
-			Position = UDim2.new(1, xOff, 0, 0), Size = UDim2.fromOffset(22, 18),
-			Text = text, TextSize = 13, AutoButtonColor = false, BorderSizePixel = 0, Parent = row },
-			{ U.New("UICorner", { CornerRadius = UDim.new(0, 5) }),
-			  U.New("UIStroke", { Thickness = 1 }) })
-		T.Register(b, { BackgroundColor3 = "Surface", TextColor3 = "SubText", Font = "FontBold" })
-		T.Register(b.UIStroke, { Color = "Stroke" })
-		Lib:Connect(b.MouseEnter, function() U.Tween(b.UIStroke, 0.1, { Color = T.Current.Accent }) end)
-		Lib:Connect(b.MouseLeave, function() U.Tween(b.UIStroke, 0.1, { Color = T.Current.Stroke }) end)
-		Lib:Connect(b.Activated, fn)
-		return b
-	end
-	stepBtn("-", -88, function() flag:SetValue(flag.Value - step) end)
-	stepBtn("+", 0, function() flag:SetValue(flag.Value + step) end)
-	local valueBtn = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -26, 0, 0), Size = UDim2.fromOffset(60, 18),
-		Text = "", TextSize = 12, AutoButtonColor = false, BackgroundTransparency = 1,
-		TextXAlignment = Enum.TextXAlignment.Center, Parent = row })
-	T.Register(valueBtn, { TextColor3 = "Accent", Font = "FontBold" })
-	local valueBox = U.New("TextBox", { AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -26, 0, 0), Size = UDim2.fromOffset(60, 18), Text = "",
-		TextSize = 12, Visible = false, ClearTextOnFocus = false,
-		TextXAlignment = Enum.TextXAlignment.Center, BorderSizePixel = 0, Parent = row },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 4) }) })
-	T.Register(valueBox, { BackgroundColor3 = "Surface", TextColor3 = "Text", Font = "Font" })
-	local track = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 18),
-		Position = UDim2.new(0, 0, 0, 24), Text = "", AutoButtonColor = false,
+	local labelRow = U.New("Frame", { Size = UDim2.new(1, 0, 0, 16),
 		BackgroundTransparency = 1, Parent = row })
-	local bar = U.New("Frame", { Size = UDim2.new(1, 0, 0, 6),
-		Position = UDim2.new(0, 0, 0.5, -3), BorderSizePixel = 0, Parent = track },
+	local label = U.New("TextLabel", { Size = UDim2.new(1, -60, 1, 0),
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		TextXAlignment = Enum.TextXAlignment.Left, Parent = labelRow })
+	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
+	local valueBtn = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(56, 16),
+		Text = "", TextSize = 11, AutoButtonColor = false, BorderSizePixel = 0, Parent = labelRow },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+		  U.New("UIStroke", { Thickness = 1 }) })
+	T.Register(valueBtn, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+	T.Register(valueBtn.UIStroke, { Color = "OutlineColor" })
+	local valueBox = U.New("TextBox", { AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(56, 16), Text = "",
+		TextSize = 11, Visible = false, ClearTextOnFocus = false,
+		TextXAlignment = Enum.TextXAlignment.Center, BorderSizePixel = 0, Parent = labelRow },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+		  U.New("UIStroke", { Thickness = 1 }) })
+	T.Register(valueBox, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+	T.Register(valueBox.UIStroke, { Color = "OutlineColor" })
+	local track = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 14),
+		Position = UDim2.new(0, 0, 1, -14), Text = "", AutoButtonColor = false,
+		BackgroundTransparency = 1, Parent = row })
+	local bar = U.New("Frame", { Size = UDim2.new(1, 0, 0, 4),
+		Position = UDim2.new(0, 0, 0.5, -2), BorderSizePixel = 0, Parent = track },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	T.Register(bar, { BackgroundColor3 = "Surface" })
-	T.Register(U.New("UIStroke", { Thickness = 1, Parent = bar }), { Color = "StrokeSoft" })
+	T.Register(bar, { BackgroundColor3 = "MainColor" })
+	T.Register(U.New("UIStroke", { Thickness = 1, Parent = bar }), { Color = "OutlineColor" })
 	local fill = U.New("Frame", { Size = UDim2.fromScale(0, 1), BorderSizePixel = 0,
 		Parent = bar }, { U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	T.Register(fill, { BackgroundColor3 = "Accent" })
-	local knob = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
-		Size = UDim2.fromOffset(14, 14), Position = UDim2.fromScale(0, 0.5),
+	T.Register(fill, { BackgroundColor3 = "AccentColor" })
+	local thumb = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
+		Size = UDim2.fromOffset(10, 10), Position = UDim2.fromScale(0, 0.5),
 		BorderSizePixel = 0, ZIndex = 2, Parent = bar },
 		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-		  U.New("UIStroke", { Thickness = 2 }) })
-	T.Register(knob, { BackgroundColor3 = "Text" })
-	T.Register(knob.UIStroke, { Color = "Accent" })
+		  U.New("UIStroke", { Thickness = 1 }) })
+	T.Register(thumb, { BackgroundColor3 = "AccentColor" })
+	T.Register(thumb.UIStroke, { Color = "BackgroundColor" })
 	local function fmt(v)
 		local s = rounding == 0 and tostring(math.floor(v)) or string.format("%." .. rounding .. "f", v)
 		return s .. (cfg.Suffix or "")
@@ -1270,10 +1119,10 @@ function Slider.Create(Lib, section, flagName, cfg)
 		local ratio = (v - self.Min) / math.max(self.Max - self.Min, 1e-9)
 		if instant then
 			fill.Size = UDim2.fromScale(ratio, 1)
-			knob.Position = UDim2.fromScale(ratio, 0.5)
+			thumb.Position = UDim2.fromScale(ratio, 0.5)
 		else
-			U.Tween(fill, 0.08, { Size = UDim2.fromScale(ratio, 1) }, Enum.EasingStyle.Linear)
-			U.Tween(knob, 0.08, { Position = UDim2.fromScale(ratio, 0.5) }, Enum.EasingStyle.Linear)
+			U.Tween(fill, 0.08, { Size = UDim2.fromScale(ratio, 1) })
+			U.Tween(thumb, 0.08, { Position = UDim2.fromScale(ratio, 0.5) })
 		end
 		valueBtn.Text = fmt(v)
 		self.OnChanged:Fire(v)
@@ -1300,586 +1149,343 @@ return Slider
 
 end)()
 M.Dropdown = (function()
--- UGeT | Dropdown: inline accordion (no overlay menus)
 local Dropdown = {}
-local Players = game:GetService("Players")
-
+local openMenu = nil
 function Dropdown.Create(Lib, section, flagName, cfg)
 	local U, T = Lib.Utility, Lib.Theme
 	cfg = cfg or {}
-	local flag = U.Flag(Lib, flagName, "Dropdown", cfg.Multi and {} or nil)
+	local multi = cfg.Multi or false
+	local defaultValue = cfg.Default
+	if multi then
+		if type(defaultValue) ~= "table" then defaultValue = defaultValue and {defaultValue} or {} end
+	else
+		defaultValue = defaultValue or (cfg.Values and cfg.Values[1]) or ""
+	end
+	local flag = U.Flag(Lib, flagName, "Dropdown", defaultValue)
 	flag.Callback = cfg.Callback or function() end
 	flag.Values = cfg.Values or {}
-	flag.Multi = cfg.Multi or false
 	flag.SpecialType = cfg.SpecialType
-	local open = false
-
-	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = section.Body },
-		{ U.New("UIListLayout", { Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder }) })
-
-	local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 32), Text = "",
-		AutoButtonColor = false, BorderSizePixel = 0, LayoutOrder = 1, Parent = row },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+	local rowH = U.IsTouch and 44 or 32
+	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
+		BackgroundTransparency = 1, Parent = section.Body })
+	local label = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 14),
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		TextXAlignment = Enum.TextXAlignment.Left, Parent = row })
+	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
+	local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 22),
+		Position = UDim2.new(0, 0, 1, -22), Text = "", AutoButtonColor = false,
+		BorderSizePixel = 0, Parent = row },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 		  U.New("UIStroke", { Thickness = 1 }),
-		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 30) }) })
-	T.Register(btn, { BackgroundColor3 = "Surface" })
-	T.Register(btn.UIStroke, { Color = "Stroke" })
-	local caption = U.New("TextLabel", { Size = UDim2.fromScale(1, 1),
-		BackgroundTransparency = 1, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left,
-		TextTruncate = Enum.TextTruncate.AtEnd, Parent = btn })
-	T.Register(caption, { TextColor3 = "Text", Font = "Font" })
-	local chevron = U.New("Frame", { AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, 18, 0.5, 0), Size = UDim2.fromOffset(14, 14),
-		BackgroundTransparency = 1, Rotation = 0, Parent = btn })
-	local function cline(x, rot)
-		local f = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
-			Size = UDim2.fromOffset(7, 1.6), Position = UDim2.fromScale(x, 0.5),
-			Rotation = rot, BorderSizePixel = 0, Parent = chevron },
-			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-		T.Register(f, { BackgroundColor3 = "SubText" })
-	end
-	cline(0.3, 45) cline(0.7, -45)
-
-	local panel = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
-		ClipsDescendants = true, BorderSizePixel = 0, LayoutOrder = 2, Parent = row },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
-		  U.New("UIStroke", { Thickness = 1 }),
-		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 6), PaddingRight = UDim.new(0, 6),
-			PaddingTop = UDim.new(0, 6), PaddingBottom = UDim.new(0, 6) }) })
-	T.Register(panel, { BackgroundColor3 = "Background" })
-	T.Register(panel.UIStroke, { Color = "StrokeSoft" })
-	local panelLayout = U.New("UIListLayout", { Padding = UDim.new(0, 4),
-		SortOrder = Enum.SortOrder.LayoutOrder, Parent = panel })
-
-	local search
-	if cfg.Searchable then
-		search = U.New("TextBox", { Size = UDim2.new(1, 0, 0, 26), Text = "",
-			PlaceholderText = "Search...", TextSize = 12, ClearTextOnFocus = false,
-			BorderSizePixel = 0, LayoutOrder = 1, Parent = panel },
-			{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }) })
-		T.Register(search, { BackgroundColor3 = "Surface", TextColor3 = "Text",
-			PlaceholderColor3 = "SubText", Font = "Font" })
-	end
-	local list = U.New("ScrollingFrame", { Size = UDim2.new(1, 0, 0, 44),
-		BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 2,
-		CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
-		LayoutOrder = 2, Parent = panel },
-		{ U.New("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }) })
-	T.Register(list, { ScrollBarImageColor3 = "Accent" })
-
-	local function resolveValues()
-		if flag.SpecialType == "Player" then
-			local t = {}
-			for _, p in ipairs(Players:GetPlayers()) do table.insert(t, p.Name) end
-			return t
-		end
-		return flag.Values
-	end
-
-	local function displayText()
-		local prefix = cfg.Text and (cfg.Text .. ": ") or ""
-		if flag.Multi then
-			local keys = {}
-			for k, v in pairs(flag.Value) do if v then table.insert(keys, tostring(k)) end end
-			table.sort(keys)
-			return prefix .. (#keys > 0 and table.concat(keys, ", ") or "None")
-		end
-		return prefix .. (flag.Value ~= nil and tostring(flag.Value) or "None")
-	end
-
-	local function callbackValue()
-		if flag.SpecialType == "Player" and not flag.Multi and type(flag.Value) == "string" then
-			return Players:FindFirstChild(flag.Value)
-		end
-		return flag.Value
-	end
-
-	function flag:SetValue(v)
-		if self.Multi then
-			self.Value = type(v) == "table" and v or {}
+		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 6), PaddingRight = UDim.new(0, 6) }) })
+	T.Register(btn, { BackgroundColor3 = "MainColor" })
+	T.Register(btn.UIStroke, { Color = "OutlineColor" })
+	local display = U.New("TextLabel", { Size = UDim2.new(1, -20, 1, 0),
+		BackgroundTransparency = 1, Text = "", TextSize = 11,
+		TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd, Parent = btn })
+	T.Register(display, { TextColor3 = "FontColor", Font = "Font" })
+	local chev = U.New("TextLabel", { Size = UDim2.fromOffset(16, 1),
+		Position = UDim2.new(1, -18, 0.5, 0), BackgroundTransparency = 1,
+		Text = "▾", TextSize = 12, Parent = btn })
+	T.Register(chev, { TextColor3 = "SubText", Font = "Font" })
+	local menu
+	local function render()
+		if multi then
+			if #flag.Value == 0 then display.Text = "None"
+			elseif #flag.Value == 1 then display.Text = tostring(flag.Value[1])
+			else display.Text = #flag.Value .. " selected" end
 		else
-			self.Value = v
+			display.Text = tostring(flag.Value or "")
 		end
-		caption.Text = displayText()
-		self.OnChanged:Fire(self.Value)
-		task.spawn(function() pcall(self.Callback, callbackValue()) end)
 	end
-
-	function flag:SetValues(newValues)
-		self.Values = newValues
-		if not self.SpecialType then
-			if self.Multi then
-				for k in pairs(self.Value) do
-					if not table.find(newValues, k) then self.Value[k] = nil end
-				end
-			elseif self.Value ~= nil and not table.find(newValues, self.Value) then
-				self.Value = nil
-			end
-		end
-		caption.Text = displayText()
+	local function closeMenu()
+		if menu then menu:Destroy() menu = nil openMenu = nil end
 	end
-
-	local listHeight = 44
-	local function rebuild()
-		for _, c in ipairs(list:GetChildren()) do
-			if c:IsA("TextButton") then c:Destroy() end
-		end
-		local filter = search and search.Text:lower() or ""
-		local count = 0
-		for _, val in ipairs(resolveValues()) do
-			local s = tostring(val)
-			if filter == "" or s:lower():find(filter, 1, true) then
-			count = count + 1
-			local selected = flag.Multi and flag.Value[val] or flag.Value == val
+	local function openTheMenu()
+		if openMenu then openMenu() end
+		openMenu = closeMenu
+		local abs = btn.AbsolutePosition
+		local absSize = btn.AbsoluteSize
+		menu = U.New("Frame", { Size = UDim2.fromOffset(absSize.X, 0),
+			Position = UDim2.fromOffset(abs.X, abs.Y + absSize.Y + 2),
+			BorderSizePixel = 0, ZIndex = 100, Parent = Lib.ScreenGui },
+			{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+			  U.New("UIStroke", { Thickness = 1 }),
+			  U.New("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }) })
+		T.Register(menu, { BackgroundColor3 = "MainColor" })
+		T.Register(menu.UIStroke, { Color = "OutlineColor" })
+		local scroll = U.New("ScrollingFrame", { Size = UDim2.new(1, 0, 0, 0),
+			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1,
+			ScrollBarThickness = 2, CanvasSize = UDim2.new(), Parent = menu },
+			{ U.New("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }) })
+		T.Register(scroll, { ScrollBarImageColor3 = "AccentColor" })
+		local items = cfg.SpecialType == "Player" and (function()
+			local t = {}
+			for _, p in ipairs(game.Players:GetPlayers()) do table.insert(t, p.Name) end
+			return t
+		end)() or flag.Values
+		for _, v in ipairs(items or {}) do
 			local item = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 26), Text = "",
-				AutoButtonColor = false, BackgroundTransparency = 1, Parent = list },
-				{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }) })
-			local itemText = U.New("TextLabel", { Size = UDim2.new(1, flag.Multi and -30 or -12, 1, 0),
-				Position = UDim2.fromOffset(flag.Multi and 28 or 8, 0), BackgroundTransparency = 1,
-				Text = s, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left,
-				TextTruncate = Enum.TextTruncate.AtEnd, Parent = item })
-			T.Register(itemText, { TextColor3 = selected and "Accent" or "Text", Font = "Font" })
-			if flag.Multi then
-				local chk = U.New("Frame", { Size = UDim2.fromOffset(14, 14),
-					Position = UDim2.new(0, 8, 0.5, -7), BorderSizePixel = 0, Parent = item },
-					{ U.New("UICorner", { CornerRadius = UDim.new(0, 4) }),
-					  U.New("UIStroke", { Thickness = 1 }) })
-				T.Register(chk, { BackgroundColor3 = selected and "Accent" or "Surface" })
-				T.Register(chk.UIStroke, { Color = "Stroke" })
-			end
-			Lib:Connect(item.MouseEnter, function()
-				item.BackgroundColor3 = T.Current.Card
-				U.Tween(item, 0.1, { BackgroundTransparency = 0 })
-			end)
-			Lib:Connect(item.MouseLeave, function() U.Tween(item, 0.1, { BackgroundTransparency = 1 }) end)
+				AutoButtonColor = false, BackgroundTransparency = 1, BorderSizePixel = 0, Parent = scroll })
+			local itemLabel = U.New("TextLabel", { Size = UDim2.new(1, -8, 1, 0),
+				Position = UDim2.fromOffset(6, 0), BackgroundTransparency = 1,
+				Text = tostring(v), TextSize = 11, TextXAlignment = Enum.TextXAlignment.Left, Parent = item })
+			T.Register(itemLabel, { TextColor3 = "FontColor", Font = "Font" })
+			Lib:Connect(item.MouseEnter, function() U.Tween(item, 0.08, { BackgroundColor3 = T.Current.AccentColor }) itemLabel.TextColor3 = T.Current.BackgroundColor end)
+			Lib:Connect(item.MouseLeave, function() item.BackgroundTransparency = 1 itemLabel.TextColor3 = T.Current.FontColor end)
 			Lib:Connect(item.Activated, function()
-				if flag.Multi then
-					local copy = {}
-					for k, v in pairs(flag.Value) do copy[k] = v end
-					copy[val] = not copy[val] or nil
-					flag:SetValue(copy)
-					rebuild()
+				if multi then
+					local idx = table.find(flag.Value, v)
+					if idx then table.remove(flag.Value, idx)
+					else table.insert(flag.Value, v) end
+					flag.OnChanged:Fire(flag.Value)
+					task.spawn(function() pcall(flag.Callback, flag.Value) end)
 				else
-					if cfg.AllowNull and flag.Value == val then flag:SetValue(nil)
-					else flag:SetValue(val) end
-					setOpen(false)
+					flag.Value = v
+					flag.OnChanged:Fire(v)
+					task.spawn(function() pcall(flag.Callback, v) end)
+					render()
+					closeMenu()
 				end
+				render()
 			end)
-			end
 		end
-		listHeight = math.min(math.max(count, 1), 7) * 26 + 2
-		list.Size = UDim2.new(1, 0, 0, listHeight)
+		local count = #items or 0
+		scroll.Size = UDim2.new(1, 0, 0, math.min(count * 26, 180))
+		menu.Size = UDim2.fromOffset(absSize.X, math.min(count * 26, 180) + 2)
 	end
-
-	function setOpen(v)
-		open = v
-		if v then
-			if search then search.Text = "" end
-			rebuild()
-		end
-		local target = v and (listHeight + (search and 34 or 0) + 12) or 0
-		U.Tween(panel, 0.2, { Size = UDim2.new(1, 0, 0, target) })
-		U.Tween(chevron, 0.2, { Rotation = v and 180 or 0 })
+	function flag:SetValue(v)
+		self.Value = v
+		render()
+		self.OnChanged:Fire(v)
+		task.spawn(function() pcall(self.Callback, v) end)
 	end
-
-	Lib:Connect(btn.Activated, function() setOpen(not open) end)
-	if search then Lib:Connect(search:GetPropertyChangedSignal("Text"), rebuild) end
-	if flag.SpecialType == "Player" then
-		local function refresh() flag:SetValues(resolveValues()) end
-		Lib:Connect(Players.PlayerAdded, refresh)
-		Lib:Connect(Players.PlayerRemoving, refresh)
+	function flag:SetValues(v)
+		self.Values = v or {}
 	end
-
-	function flag:Serialize()
-		if self.Multi then
-			local arr = {}
-			for k, v in pairs(self.Value) do if v then table.insert(arr, tostring(k)) end end
-			return { Multi = arr }
-		end
-		return self.Value ~= nil and tostring(self.Value) or ""
-	end
-	function flag:Deserialize(data)
-		if self.Multi and type(data) == "table" and data.Multi then
-			local map = {}
-			for _, k in ipairs(data.Multi) do map[k] = true end
-			self:SetValue(map)
-		elseif not self.Multi then
-			self:SetValue(data ~= "" and data or nil)
-		end
-	end
-
-	local d = cfg.Default
-	if flag.Multi then
-		if type(d) == "table" then flag:SetValue(d) else caption.Text = displayText() end
-	elseif d ~= nil then
-		local vals = resolveValues()
-		flag:SetValue(type(d) == "number" and vals[d] or d)
-	else
-		caption.Text = displayText()
-	end
-
+	Lib:Connect(btn.Activated, function()
+		if menu then closeMenu() else openTheMenu() end
+	end)
+	render()
 	flag.Instance = row
 	return flag
 end
-
 return Dropdown
 
 end)()
 M.Input = (function()
--- UGeT | Input: text field, numeric filter, finished mode
 local Input = {}
-
 function Input.Create(Lib, section, flagName, cfg)
 	local U, T = Lib.Utility, Lib.Theme
-	cfg = type(cfg) == "table" and cfg or { Placeholder = cfg }
+	cfg = cfg or {}
 	local flag = U.Flag(Lib, flagName, "Input", cfg.Default or "")
 	flag.Callback = cfg.Callback or function() end
-
-	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, cfg.Text and 46 or 30),
+	local rowH = U.IsTouch and 44 or 32
+	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
 		BackgroundTransparency = 1, Parent = section.Body })
-	if cfg.Text then
-		local label = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 18),
-			BackgroundTransparency = 1, Text = cfg.Text, TextSize = 13,
-			TextXAlignment = Enum.TextXAlignment.Left, Parent = row })
-		T.Register(label, { TextColor3 = "Text", Font = "Font" })
-	end
-	local box = U.New("TextBox", { Size = UDim2.new(1, 0, 0, 28),
-		Position = UDim2.new(0, 0, 0, cfg.Text and 18 or 1), Text = flag.Value,
-		PlaceholderText = cfg.Placeholder or "", TextSize = 12, ClearTextOnFocus = false,
+	local label = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 14),
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		TextXAlignment = Enum.TextXAlignment.Left, Parent = row })
+	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
+	local box = U.New("TextBox", { Size = UDim2.new(1, 0, 0, 22),
+		Position = UDim2.new(0, 0, 1, -22), Text = flag.Value,
+		PlaceholderText = cfg.Placeholder or "", TextSize = 11,
+		ClearTextOnFocus = cfg.ClearTextOnFocus or false,
 		TextXAlignment = Enum.TextXAlignment.Left, BorderSizePixel = 0, Parent = row },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 		  U.New("UIStroke", { Thickness = 1 }),
-		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10) }) })
-	T.Register(box, { BackgroundColor3 = "Surface", TextColor3 = "Text",
-		PlaceholderColor3 = "SubText", Font = "Font" })
-	T.Register(box.UIStroke, { Color = "Stroke" })
-	Lib:Connect(box.Focused, function() U.Tween(box.UIStroke, 0.12, { Color = T.Current.Accent }) end)
-	Lib:Connect(box.FocusLost, function()
-		U.Tween(box.UIStroke, 0.12, { Color = T.Current.Stroke })
-		if cfg.Finished then task.spawn(function() pcall(flag.Callback, flag.Value) end) end
-	end)
-
-	function flag:SetValue(t)
-		self.Value = tostring(t)
-		box.Text = self.Value
-		self.OnChanged:Fire(self.Value)
-		task.spawn(function() pcall(self.Callback, self.Value) end)
-	end
-
+		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 6), PaddingRight = UDim.new(0, 6) }) })
+	T.Register(box, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", PlaceholderColor3 = "SubText", Font = "Font" })
+	T.Register(box.UIStroke, { Color = "OutlineColor" })
+	if cfg.Numeric then box:SetAttribute("numeric", true) end
 	Lib:Connect(box:GetPropertyChangedSignal("Text"), function()
-		if cfg.Numeric then
-			local clean = box.Text:gsub("[^%d%.%-]", "")
-			if clean ~= box.Text then box.Text = clean return end
+		if cfg.Numeric and box.Text ~= "" and not tonumber(box.Text) then
+			box.Text = box.Text:sub(1, -2)
 		end
-		flag.Value = box.Text
-		flag.OnChanged:Fire(flag.Value)
-		if not cfg.Finished then task.spawn(function() pcall(flag.Callback, flag.Value) end) end
+		if not cfg.Finished then
+			flag.Value = box.Text
+			flag.OnChanged:Fire(box.Text)
+			task.spawn(function() pcall(flag.Callback, box.Text) end)
+		end
 	end)
-
+	Lib:Connect(box.FocusLost, function(enterPressed)
+		if cfg.Finished then
+			flag.Value = box.Text
+			flag.OnChanged:Fire(box.Text)
+			task.spawn(function() pcall(flag.Callback, box.Text) end)
+		end
+	end)
+	Lib:Connect(box.Focused, function()
+		U.Tween(box.UIStroke, 0.1, { Color = T.Current.AccentColor })
+	end)
+	Lib:Connect(box.FocusLost:Connect(function()
+		U.Tween(box.UIStroke, 0.1, { Color = T.Current.OutlineColor })
+	end))
 	flag.Instance = row
 	return flag
 end
-
 return Input
 
 end)()
 M.ColorPicker = (function()
--- UGeT | ColorPicker: inline HSV panel + hex + optional alpha
 local ColorPicker = {}
-
 function ColorPicker.Create(Lib, section, flagName, cfg)
 	local U, T = Lib.Utility, Lib.Theme
 	cfg = cfg or {}
-	local flag = U.Flag(Lib, flagName, "ColorPicker", cfg.Default or Color3.new(1, 1, 1))
+	local flag = U.Flag(Lib, flagName, "ColorPicker", cfg.Default or Color3.new(1,1,1))
 	flag.Callback = cfg.Callback or function() end
-	flag.Transparency = cfg.Transparency or 0
-	flag.HasAlpha = cfg.Transparency ~= nil
-	local H, S, V = flag.Value:ToHSV()
-	local A = flag.Transparency
-	local open = false
-
-	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
-		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = section.Body },
-		{ U.New("UIListLayout", { Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder }) })
-
-	local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 28), Text = "",
-		AutoButtonColor = false, BackgroundTransparency = 1, LayoutOrder = 1, Parent = row })
-	local label = U.New("TextLabel", { Size = UDim2.new(1, -70, 1, 0),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = 13,
-		TextXAlignment = Enum.TextXAlignment.Left, Parent = btn })
-	T.Register(label, { TextColor3 = "Text", Font = "Font" })
-	local hexLabel = U.New("TextLabel", { AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -34, 0.5, 0), Size = UDim2.fromOffset(64, 18),
-		BackgroundTransparency = 1, Text = U.Hex(flag.Value), TextSize = 11,
-		TextXAlignment = Enum.TextXAlignment.Right, Parent = btn })
-	T.Register(hexLabel, { TextColor3 = "SubText", Font = "Font" })
-	local swatch = U.New("Frame", { AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(26, 18),
-		BackgroundColor3 = flag.Value, BorderSizePixel = 0, Parent = btn },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 5) }),
+	local rowH = U.IsTouch and 40 or 30
+	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
+		BackgroundTransparency = 1, Parent = section.Body })
+	local label = U.New("TextLabel", { Size = UDim2.new(1, -40, 1, 0),
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		TextXAlignment = Enum.TextXAlignment.Left, Parent = row })
+	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
+	local sample = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(34, 18),
+		Text = "", AutoButtonColor = false, BorderSizePixel = 0, Parent = row },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 		  U.New("UIStroke", { Thickness = 1 }) })
-	T.Register(swatch.UIStroke, { Color = "Stroke" })
-
-	local panel = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0), ClipsDescendants = true,
-		BorderSizePixel = 0, LayoutOrder = 2, Parent = row },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
-		  U.New("UIStroke", { Thickness = 1 }),
-		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8),
-			PaddingTop = UDim.new(0, 8), PaddingBottom = UDim.new(0, 8) }),
-		  U.New("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }) })
-	T.Register(panel, { BackgroundColor3 = "Background" })
-	T.Register(panel.UIStroke, { Color = "StrokeSoft" })
-
-	local hexBox = U.New("TextBox", { Size = UDim2.new(1, 0, 0, 24), Text = U.Hex(flag.Value),
-		TextSize = 12, ClearTextOnFocus = false, BorderSizePixel = 0, LayoutOrder = 1, Parent = panel },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }),
-		  U.New("UIStroke", { Thickness = 1 }) })
-	T.Register(hexBox, { BackgroundColor3 = "Surface", TextColor3 = "Text", Font = "Font" })
-	T.Register(hexBox.UIStroke, { Color = "Stroke" })
-
-	local satMap = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 130), Text = "",
-		AutoButtonColor = false, BorderSizePixel = 0, ClipsDescendants = true,
-		LayoutOrder = 2, Parent = panel },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }) })
-	local satGrad = U.New("UIGradient", { Parent = satMap })
-	U.New("Frame", { Size = UDim2.fromScale(1, 1), BackgroundColor3 = Color3.new(0, 0, 0),
-		BorderSizePixel = 0, ZIndex = 2, Parent = satMap },
-		{ U.New("UIGradient", { Rotation = 90, Transparency = NumberSequence.new({
-			NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(1, 0) }) }) })
-	local satCursor = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
-		Size = UDim2.fromOffset(10, 10), BackgroundTransparency = 1, ZIndex = 3, Parent = satMap },
-		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-		  U.New("UIStroke", { Thickness = 1.5, Color = Color3.new(1, 1, 1) }) })
-
-	local hueBar = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 12), Text = "",
-		AutoButtonColor = false, BorderSizePixel = 0, LayoutOrder = 3, Parent = panel },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }) })
-	U.New("UIGradient", { Rotation = 0, Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
-		ColorSequenceKeypoint.new(0.167, Color3.fromRGB(255, 255, 0)),
-		ColorSequenceKeypoint.new(0.333, Color3.fromRGB(0, 255, 0)),
-		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
-		ColorSequenceKeypoint.new(0.667, Color3.fromRGB(0, 0, 255)),
-		ColorSequenceKeypoint.new(0.833, Color3.fromRGB(255, 0, 255)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0)),
-	}), Parent = hueBar })
-	local hueCursor = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
-		Size = UDim2.new(0, 4, 1, 2), BackgroundColor3 = Color3.new(1, 1, 1),
-		BorderSizePixel = 0, ZIndex = 2, Parent = hueBar },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 2) }) })
-
-	local alphaGrad, alphaCursor
-	if flag.HasAlpha then
-		local alphaWrap = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 12), Text = "",
-			AutoButtonColor = false, BorderSizePixel = 0, ClipsDescendants = true,
-			LayoutOrder = 4, Parent = panel },
-			{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }) })
-		U.Checker(alphaWrap, 300, 12)
-		local fill = U.New("Frame", { Size = UDim2.fromScale(1, 1), BorderSizePixel = 0,
-			ZIndex = 2, Parent = alphaWrap })
-		alphaGrad = U.New("UIGradient", { Transparency = NumberSequence.new({
-			NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1) }), Parent = fill })
-		alphaCursor = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
-			Size = UDim2.new(0, 4, 1, 2), BackgroundColor3 = Color3.new(1, 1, 1),
-			BorderSizePixel = 0, ZIndex = 3, Parent = alphaWrap },
-			{ U.New("UICorner", { CornerRadius = UDim.new(0, 2) }) })
-		U.TrackDrag(Lib, alphaWrap, function(x) A = x apply(true) end)
+	T.Register(sample.UIStroke, { Color = "OutlineColor" })
+	function flag:SetValue(c)
+		self.Value = c
+		sample.BackgroundColor3 = c
+		self.OnChanged:Fire(c)
+		task.spawn(function() pcall(self.Callback, c) end)
 	end
-
-	function apply(fire)
-		flag.Value = Color3.fromHSV(H, S, V)
-		flag.Transparency = A
-		swatch.BackgroundColor3 = flag.Value
-		hexLabel.Text = U.Hex(flag.Value)
-		satMap.BackgroundColor3 = Color3.fromHSV(H, 1, 1)
-		satGrad.Color = ColorSequence.new(Color3.new(1, 1, 1), Color3.fromHSV(H, 1, 1))
-		satCursor.Position = UDim2.fromScale(S, 1 - V)
-		hueCursor.Position = UDim2.new(H, 0, 0.5, 0)
-		if alphaGrad then
-			alphaGrad.Color = ColorSequence.new(flag.Value)
-			alphaCursor.Position = UDim2.new(A, 0, 0.5, 0)
+	Lib:Connect(sample.Activated, function()
+		local h, s, v = flag.Value:ToHSV()
+		local popup = U.New("Frame", { Size = UDim2.fromOffset(200, 160),
+			Position = UDim2.fromOffset(sample.AbsolutePosition.X - 170, sample.AbsolutePosition.Y + 24),
+			BorderSizePixel = 0, ZIndex = 100, Parent = Lib.ScreenGui },
+			{ U.New("UICorner", { CornerRadius = UDim.new(0, 4) }),
+			  U.New("UIStroke", { Thickness = 1 }),
+			  U.New("UIPadding", { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8),
+				PaddingTop = UDim.new(0, 8), PaddingBottom = UDim.new(0, 8) }) })
+		T.Register(popup, { BackgroundColor3 = "BackgroundColor" })
+		T.Register(popup.UIStroke, { Color = "OutlineColor" })
+		local svPad = U.New("Frame", { Size = UDim2.new(1, 0, 0, 100), BorderSizePixel = 0, Parent = popup },
+			{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+			  U.New("UIGradient", { Color = ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.fromHSV(h,0,1)),ColorSequenceKeypoint.new(1,Color3.fromHSV(h,1,1))} }),
+			  U.New("UIGradient", { Color = ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.new(0,0,0),0),ColorSequenceKeypoint.new(1,Color3.new(0,0,0))}, Rotation = 90 }) })
+		local hBar = U.New("Frame", { Size = UDim2.new(1, 0, 0, 14),
+			Position = UDim2.new(0, 0, 1, -40), BorderSizePixel = 0, Parent = popup },
+			{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+			  U.New("UIGradient", { Color = ColorSequence.new{
+				ColorSequenceKeypoint.new(0, Color3.fromRGB(255,0,0)),
+				ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255,255,0)),
+				ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0,255,0)),
+				ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0,255,255)),
+				ColorSequenceKeypoint.new(0.67, Color3.fromRGB(0,0,255)),
+				ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255,0,255)),
+				ColorSequenceKeypoint.new(1, Color3.fromRGB(255,0,0)) } }) })
+		local svKnob = U.New("Frame", { Size = UDim2.fromOffset(8, 8),
+			AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(s, 1 - v),
+			BorderSizePixel = 0, ZIndex = 2, Parent = svPad },
+			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+			  U.New("UIStroke", { Thickness = 1.5, Color = Color3.new(1,1,1) }) })
+		local hKnob = U.New("Frame", { Size = UDim2.fromOffset(4, 14),
+			Position = UDim2.fromScale(h, 0), BorderSizePixel = 0, ZIndex = 2, Parent = hBar },
+			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+			  U.New("UIStroke", { Thickness = 1.5, Color = Color3.new(1,1,1) }) })
+		local closeBtn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, 20),
+			Position = UDim2.new(0, 0, 1, -20), Text = "Close", TextSize = 11,
+			AutoButtonColor = false, BorderSizePixel = 0, Parent = popup },
+			{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }) })
+		T.Register(closeBtn, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+		local function apply()
+			local c = Color3.fromHSV(h, s, v)
+			svPad.UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.fromHSV(h,0,1)),ColorSequenceKeypoint.new(1,Color3.fromHSV(h,1,1))}
+			flag:SetValue(c)
 		end
-		if not hexBox:IsFocused() then hexBox.Text = U.Hex(flag.Value) end
-		if fire then
-			flag.OnChanged:Fire(flag.Value)
-			task.spawn(function()
-				if flag.HasAlpha then pcall(flag.Callback, flag.Value, A)
-				else pcall(flag.Callback, flag.Value) end
-			end)
-		end
-	end
-
-	U.TrackDrag(Lib, satMap, function(x, y) S, V = x, 1 - y apply(true) end)
-	U.TrackDrag(Lib, hueBar, function(x) H = x apply(true) end)
-	Lib:Connect(hexBox.FocusLost, function()
-		local c = U.FromHex(hexBox.Text)
-		if c then H, S, V = c:ToHSV() end
-		apply(true)
+		U.TrackDrag(Lib, svPad, function(x, y) s = x; v = 1 - y; svKnob.Position = UDim2.fromScale(s, v); apply() end)
+		U.TrackDrag(Lib, hBar, function(x) h = x; hKnob.Position = UDim2.fromScale(h, 0); apply() end)
+		Lib:Connect(closeBtn.Activated, function() popup:Destroy() end)
 	end)
-
-	local panelHeight = flag.HasAlpha and 216 or 198
-	Lib:Connect(btn.Activated, function()
-		open = not open
-		if open then apply(false) end
-		U.Tween(panel, 0.2, { Size = UDim2.new(1, 0, 0, open and panelHeight or 0) })
-	end)
-
-	function flag:SetValue(color, alpha)
-		H, S, V = color:ToHSV()
-		if alpha then A = alpha end
-		apply(true)
-	end
-	function flag:Serialize()
-		return { Color = U.Hex(self.Value), Transparency = self.Transparency }
-	end
-	function flag:Deserialize(data)
-		local c = type(data) == "table" and U.FromHex(data.Color) or nil
-		if c then self:SetValue(c, data.Transparency) end
-	end
-
+	flag:SetValue(flag.Value)
 	flag.Instance = row
 	return flag
 end
-
 return ColorPicker
 
 end)()
 M.Keybind = (function()
--- UGeT | Keybind: inline capture, mode chip (Toggle / Hold / Press)
 local Keybind = {}
-local SHORT = { MouseButton1 = "MB1", MouseButton2 = "MB2", MouseButton3 = "MB3" }
-local MODES = { "Toggle", "Hold", "Press" }
-
 function Keybind.Create(Lib, section, flagName, cfg)
 	local U, T = Lib.Utility, Lib.Theme
 	cfg = cfg or {}
 	local flag = U.Flag(Lib, flagName, "Keybind", cfg.Default or "None")
-	flag.Mode = cfg.Mode or "Toggle"
 	flag.Callback = cfg.Callback or function() end
+	flag.Mode = cfg.Mode or "Toggle"
+	local modes = { "Toggle", "Hold", "Press" }
 	flag.State = false
-	flag.SyncWith = cfg.SyncWith
-	local pressing = false
-
-	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, 28),
+	local rowH = U.IsTouch and 40 or 30
+	local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, rowH),
 		BackgroundTransparency = 1, Parent = section.Body })
-	local label = U.New("TextLabel", { Size = UDim2.new(1, -130, 1, 0),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = 13,
-		TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd,
-		Parent = row })
-	T.Register(label, { TextColor3 = "Text", Font = "Font" })
-
-	local modeChip = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -66, 0.5, 0), Size = UDim2.fromOffset(58, 22),
-		Text = flag.Mode, TextSize = 10, AutoButtonColor = false, BorderSizePixel = 0, Parent = row },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }),
+	local label = U.New("TextLabel", { Size = UDim2.new(1, -110, 1, 0),
+		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
+		TextXAlignment = Enum.TextXAlignment.Left, Parent = row })
+	T.Register(label, { TextColor3 = "FontColor", Font = "Font" })
+	local modeBtn = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, -66, 0.5, 0), Size = UDim2.fromOffset(62, 18),
+		Text = "[" .. flag.Mode .. "]", TextSize = 10, AutoButtonColor = false,
+		BorderSizePixel = 0, Parent = row },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 		  U.New("UIStroke", { Thickness = 1 }) })
-	T.Register(modeChip, { BackgroundColor3 = "Surface", TextColor3 = "SubText", Font = "Font" })
-	T.Register(modeChip.UIStroke, { Color = "Stroke" })
-
-	local keyChip = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(60, 22),
-		Text = "", TextSize = 11, AutoButtonColor = false, BorderSizePixel = 0, Parent = row },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 6) }),
+	T.Register(modeBtn, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+	T.Register(modeBtn.UIStroke, { Color = "OutlineColor" })
+	local keyBtn = U.New("TextButton", { AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(62, 18),
+		Text = "[" .. tostring(flag.Value) .. "]", TextSize = 10, AutoButtonColor = false,
+		BorderSizePixel = 0, Parent = row },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 		  U.New("UIStroke", { Thickness = 1 }) })
-	T.Register(keyChip, { BackgroundColor3 = "Surface", Font = "FontBold" })
-	T.Register(keyChip.UIStroke, { Color = "Stroke" })
-
-	local function render()
-		keyChip.Text = flag.Value == "None" and "..." or (SHORT[flag.Value] or flag.Value)
-		keyChip.TextColor3 = flag:GetState() and T.Current.Accent or T.Current.SubText
+	T.Register(keyBtn, { BackgroundColor3 = "MainColor", TextColor3 = "FontColor", Font = "Font" })
+	T.Register(keyBtn.UIStroke, { Color = "OutlineColor" })
+	function flag:_SetKey(k)
+		self.Value = k
+		keyBtn.Text = "[" .. tostring(k) .. "]"
+		self.OnChanged:Fire(k)
 	end
-
-	function flag:GetState()
-		if self.SyncWith then
-			local target = Lib.Flags[self.SyncWith]
-			if target then return target.Value and true or false end
-		end
-		if self.Mode == "Hold" then return pressing end
-		if self.Mode == "Press" then return false end
-		return self.State
-	end
-
-	local function fire()
-		render()
-		flag.OnChanged:Fire(flag:GetState())
-		task.spawn(function() pcall(flag.Callback, flag:GetState()) end)
-	end
-
-	function flag:_SetKey(key)
-		self.Value = key
-		self.State = false
-		pressing = false
-		render()
-	end
-
+	Lib:Connect(keyBtn.Activated, function()
+		Lib.Capturing = flag
+		keyBtn.UIStroke.Color = T.Current.AccentColor
+		task.delay(8, function() if Lib.Capturing == flag then Lib.Capturing = nil keyBtn.UIStroke.Color = T.Current.OutlineColor end end)
+	end)
+	Lib:Connect(modeBtn.Activated, function()
+		local cur = table.find(modes, flag.Mode) or 1
+		flag.Mode = modes[cur % #modes + 1]
+		modeBtn.Text = "[" .. flag.Mode .. "]"
+	end)
 	function flag:_OnBegan(input)
-		if self.Value == "None" then return end
-		local name = input.UserInputType == Enum.UserInputType.Keyboard
-			and input.KeyCode.Name or input.UserInputType.Name
-		if name ~= self.Value then return end
-		if self.SyncWith then
-			local target = Lib.Flags[self.SyncWith]
-			if target and target.Type == "Toggle" then
-				target:SetValue(not target.Value)
-				fire()
-				return
+		if input.UserInputType == Enum.UserInputType.Keyboard then
+			if input.KeyCode.Name == self.Value then
+				if self.Mode == "Toggle" then
+					self.State = not self.State
+					task.spawn(function() pcall(self.Callback, self.State) end)
+				elseif self.Mode == "Press" then
+					task.spawn(function() pcall(self.Callback, true) end)
+				elseif self.Mode == "Hold" then
+					self.State = true
+					task.spawn(function() pcall(self.Callback, true) end)
+				end
 			end
 		end
-		if self.Mode == "Toggle" then
-			self.State = not self.State
-			fire()
-		elseif self.Mode == "Hold" then
-			pressing = true
-			fire()
-		else
-			render()
-			self.OnChanged:Fire(true)
-			task.spawn(function() pcall(self.Callback, true) end)
-		end
 	end
-
 	function flag:_OnEnded(input)
-		if self.Value == "None" or self.Mode ~= "Hold" then return end
-		local name = input.UserInputType == Enum.UserInputType.Keyboard
-			and input.KeyCode.Name or input.UserInputType.Name
-		if name == self.Value then
-			pressing = false
-			fire()
+		if input.UserInputType == Enum.UserInputType.Keyboard then
+			if input.KeyCode.Name == self.Value and self.Mode == "Hold" then
+				self.State = false
+				task.spawn(function() pcall(self.Callback, false) end)
+			end
 		end
 	end
-
-	function flag:SetValue(key, mode)
-		self.Value = key or self.Value
-		self.Mode = mode or self.Mode
-		modeChip.Text = self.Mode
-		render()
-	end
-	function flag:Serialize() return { Key = self.Value, Mode = self.Mode } end
-	function flag:Deserialize(d)
-		if type(d) == "table" then self:SetValue(d.Key, d.Mode) end
-	end
-
-	Lib:Connect(modeChip.Activated, function()
-		local i = table.find(MODES, flag.Mode) or 1
-		flag.Mode = MODES[i % #MODES + 1]
-		flag.State = false
-		pressing = false
-		modeChip.Text = flag.Mode
-		fire()
+	Lib:Connect(T.Changed, function()
+		keyBtn.UIStroke.Color = T.Current.OutlineColor
 	end)
-	Lib:Connect(keyChip.Activated, function()
-		Lib.Capturing = flag
-		keyChip.Text = "press..."
-		keyChip.TextColor3 = T.Current.Warning
-	end)
-	Lib:Connect(T.Changed:Connect(render))
-	render()
-
 	flag.Instance = row
 	return flag
 end
-
 return Keybind
 
 end)()
@@ -2769,86 +2375,60 @@ return Animator3D
 
 end)()
 M.Notifications = (function()
--- UGeT | Notifications: top-right toasts
 local Notifications = {}
-
 function Notifications.Init(Lib)
 	local U, T = Lib.Utility, Lib.Theme
 	local container = U.New("Frame", { Name = "UGeT_Notifications",
 		AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -12, 0, 12),
-		Size = UDim2.new(0, 280, 1, -24), BackgroundTransparency = 1,
+		Size = UDim2.new(0, 260, 1, -24), BackgroundTransparency = 1,
 		ZIndex = 80, Parent = Lib.ScreenGui },
-		{ U.New("UIListLayout", { Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder,
+		{ U.New("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder,
 			VerticalAlignment = Enum.VerticalAlignment.Top }) })
-
 	function Lib:Notify(data, duration)
 		if Lib.NotificationsEnabled == false then return end
 		if type(data) ~= "table" then data = { Text = tostring(data), Time = duration } end
 		duration = data.Time or 4
-		local tone = ({ success = "Success", warn = "Warning", error = "Danger", info = "Info" })[data.Type or ""] or "Accent"
-
-		local frames = 0
-		for _, c in ipairs(container:GetChildren()) do
-			if c:IsA("Frame") then frames = frames + (1) end
-		end
-		if frames >= 6 then
-			for _, c in ipairs(container:GetChildren()) do
-				if c:IsA("Frame") then c:Destroy() break end
-			end
-		end
-
+		local toneMap = { success = "Success", warn = "Warning", error = "Danger", info = "Info" }
+		local tone = toneMap[data.Type or ""] or "AccentColor"
 		local frame = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BorderSizePixel = 0,
 			ClipsDescendants = true, Parent = container },
-			{ U.New("UICorner", { CornerRadius = UDim.new(0, 10) }),
+			{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
 			  U.New("UIStroke", { Thickness = 1 }),
-			  U.New("UIPadding", { PaddingLeft = UDim.new(0, 14), PaddingRight = UDim.new(0, 12),
-				PaddingTop = UDim.new(0, 9), PaddingBottom = UDim.new(0, 12) }),
-			  U.New("UIScale", { Scale = 0.9 }),
+			  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10),
+				PaddingTop = UDim.new(0, 8), PaddingBottom = UDim.new(0, 8) }),
 			  U.New("UIListLayout", { Padding = UDim.new(0, 2), SortOrder = Enum.SortOrder.LayoutOrder }) })
-		T.Register(frame, { BackgroundColor3 = "Surface" })
-		T.Register(frame.UIStroke, { Color = "Stroke" })
-
-		local headRow = U.New("Frame", { Size = UDim2.new(1, 0, 0, 16),
-			BackgroundTransparency = 1, LayoutOrder = 1, Parent = frame })
-		local dot = U.New("Frame", { Size = UDim2.fromOffset(7, 7),
-			Position = UDim2.new(0, 0, 0.5, -3.5), BorderSizePixel = 0, Parent = headRow },
-			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-		T.Register(dot, { BackgroundColor3 = tone })
-		local head = U.New("TextLabel", { Size = UDim2.new(1, -14, 1, 0),
-			Position = UDim2.fromOffset(14, 0), BackgroundTransparency = 1,
-			Text = data.Title or Lib.Name, TextSize = 12,
-			TextXAlignment = Enum.TextXAlignment.Left, Parent = headRow })
-		T.Register(head, { TextColor3 = "Text", Font = "FontBold" })
+		T.Register(frame, { BackgroundColor3 = "MainColor" })
+		T.Register(frame.UIStroke, { Color = "OutlineColor" })
+		local head = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 14),
+			BackgroundTransparency = 1, Text = data.Title or Lib.Name,
+			TextSize = 11, TextXAlignment = Enum.TextXAlignment.Left, Parent = frame })
+		T.Register(head, { TextColor3 = tone, Font = "FontBold" })
 		local body = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1,
-			Text = tostring(data.Text or ""), TextSize = 12, TextWrapped = true,
-			TextXAlignment = Enum.TextXAlignment.Left, LayoutOrder = 2, Parent = frame })
-		T.Register(body, { TextColor3 = "SubText", Font = "Font" })
-		local progress = U.New("Frame", { Size = UDim2.new(1, 0, 0, 2),
-			Position = UDim2.new(0, 0, 1, -2), BorderSizePixel = 0, Parent = frame })
+			Text = tostring(data.Text or ""), TextSize = 11, TextWrapped = true,
+			TextXAlignment = Enum.TextXAlignment.Left, Parent = frame })
+		T.Register(body, { TextColor3 = "FontColor", Font = "Font" })
+		local progress = U.New("Frame", { Size = UDim2.new(1, 0, 0, 1),
+			Position = UDim2.new(0, 0, 1, -1), BorderSizePixel = 0, Parent = frame })
 		T.Register(progress, { BackgroundColor3 = tone })
-
-		U.Tween(frame.UIScale, 0.22, { Scale = 1 }, Enum.EasingStyle.Back)
-		U.Tween(progress, duration, { Size = UDim2.new(0, 0, 0, 2) }, Enum.EasingStyle.Linear)
-
+		frame.Size = UDim2.new(1, 0, 0, 0)
+		U.Tween(progress, duration, { Size = UDim2.new(0, 0, 0, 1) }, Enum.EasingStyle.Linear)
 		local dismissed = false
 		local function dismiss()
 			if dismissed or not frame.Parent then return end
 			dismissed = true
-			U.Tween(frame.UIScale, 0.16, { Scale = 0.9 })
-			U.Tween(frame, 0.16, { BackgroundTransparency = 1 })
-			U.Tween(body, 0.16, { TextTransparency = 1 })
-			U.Tween(head, 0.16, { TextTransparency = 1 })
+			U.Tween(frame, 0.15, { BackgroundTransparency = 1 })
+			U.Tween(body, 0.15, { TextTransparency = 1 })
+			U.Tween(head, 0.15, { TextTransparency = 1 })
 			task.delay(0.18, function() frame:Destroy() end)
 		end
 		local click = U.New("TextButton", { Size = UDim2.fromScale(1, 1), Text = "",
 			BackgroundTransparency = 1, ZIndex = 5, Parent = frame })
-		click.Activated:Connect(dismiss)
+		Lib:Connect(click.Activated, dismiss)
 		task.delay(duration, dismiss)
 	end
 end
-
 return Notifications
 
 end)()
@@ -3126,31 +2706,25 @@ function Controls.Init(l)
 	local btn = U.New("TextButton", { Name = "UGeT_Toggle",
 		AnchorPoint = Vector2.new(1, 0),
 		Position = UDim2.new(1, -80, 0, 14),
-		Size = U.IsTouch and UDim2.fromOffset(100, 46) or UDim2.fromOffset(88, 36),
+		Size = U.IsTouch and UDim2.fromOffset(90, 36) or UDim2.fromOffset(72, 28),
 		Text = "", AutoButtonColor = false, BorderSizePixel = 0, ZIndex = 60,
 		Parent = Lib.ScreenGui },
-		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-		  U.New("UIStroke", { Thickness = 1.5 }), U.New("UIScale", { Scale = 1 }) })
-	T.Register(btn, { BackgroundColor3 = "Surface" })
-	T.Register(btn.UIStroke, { Color = "Accent" })
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+		  U.New("UIStroke", { Thickness = 1 }) })
+	T.Register(btn, { BackgroundColor3 = "BackgroundColor" })
+	T.Register(btn.UIStroke, { Color = "OutlineColor" })
 	Controls.Button = btn
-	local dot = U.New("Frame", { Size = UDim2.fromOffset(9, 9),
-		Position = UDim2.new(0, 14, 0.5, -4.5), BorderSizePixel = 0, Parent = btn },
-		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	T.Register(dot, { BackgroundColor3 = "Accent" })
-	local label = U.New("TextLabel", { Size = UDim2.new(1, -30, 1, 0),
-		Position = UDim2.fromOffset(30, 0), BackgroundTransparency = 1, Text = "toggle",
-		TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Parent = btn })
-	T.Register(label, { TextColor3 = "Text", Font = "FontBold" })
+	local label = U.New("TextLabel", { Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1, Text = "toggle",
+		TextSize = U.IsTouch and 12 or 11, Parent = btn })
+	T.Register(label, { TextColor3 = "FontColor", Font = "FontBold" })
 	local function render()
 		local on = Lib.Toggled
-		U.Tween(dot, 0.2, { BackgroundColor3 = on and T.Current.Accent or T.Current.SubText })
-		U.Tween(btn.UIStroke, 0.2, { Color = on and T.Current.Accent or T.Current.Stroke })
+		btn.UIStroke.Color = on and T.Current.AccentColor or T.Current.OutlineColor
+		label.TextColor3 = on and T.Current.AccentColor or T.Current.FontColor
 	end
 	U.Draggable(Lib, btn, btn)
 	Lib:Connect(btn.Activated, function()
-		btn.UIScale.Scale = 0.9
-		U.Tween(btn.UIScale, 0.2, { Scale = 1 }, Enum.EasingStyle.Back)
 		Lib:Toggle()
 		render()
 	end)

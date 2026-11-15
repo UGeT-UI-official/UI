@@ -4,46 +4,34 @@ function Toggle.Create(Lib, section, flagName, cfgOrBool, fn)
 	local cfg = type(cfgOrBool) == "table" and cfgOrBool or { Default = cfgOrBool, Callback = fn, Text = flagName }
 	local flag = U.Flag(Lib, flagName, "Toggle", cfg.Default or false)
 	flag.Callback = cfg.Callback or function() end
-	local touch = U.IsTouch
-	local rowH = touch and 44 or 30
-	local sw = touch and 50 or 40
-	local sh = touch and 28 or 22
-	local ks = sh - 6
+	local rowH = U.IsTouch and 36 or 26
 	local row = U.New("TextButton", { Size = UDim2.new(1, 0, 0, rowH), Text = "",
 		AutoButtonColor = false, BackgroundTransparency = 1, Parent = section.Body })
-	local label = U.New("TextLabel", { Size = UDim2.new(1, -(sw + 14), 1, 0),
-		BackgroundTransparency = 1, Text = cfg.Text or flagName, TextSize = touch and 14 or 13,
+	local box = U.New("Frame", { Size = UDim2.fromOffset(14, 14),
+		Position = UDim2.new(0, 0, 0.5, -7), BorderSizePixel = 0, Parent = row },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 2) }),
+		  U.New("UIStroke", { Thickness = 1 }) })
+	T.Register(box, { BackgroundColor3 = "MainColor" })
+	T.Register(box.UIStroke, { Color = "OutlineColor" })
+	local check = U.New("Frame", { Size = UDim2.fromOffset(8, 8),
+		Position = UDim2.fromOffset(3, 3), BorderSizePixel = 0, Visible = false, Parent = box },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 1) }) })
+	T.Register(check, { BackgroundColor3 = "AccentColor" })
+	local label = U.New("TextLabel", { Size = UDim2.new(1, -22, 1, 0),
+		Position = UDim2.fromOffset(20, 0), BackgroundTransparency = 1,
+		Text = cfg.Text or flagName, TextSize = U.IsTouch and 13 or 12,
 		TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd, Parent = row })
-	T.Register(label, { TextColor3 = cfg.Risky and "Danger" or "Text", Font = "Font" })
-	local pill = U.New("Frame", { AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.fromOffset(sw, sh),
-		BorderSizePixel = 0, Parent = row },
-		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	local knob = U.New("Frame", { Size = UDim2.fromOffset(ks, ks),
-		Position = UDim2.new(0, 3, 0.5, -ks / 2), BorderSizePixel = 0, Parent = pill },
-		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-	local function render(v, instant)
-		local kp = v and UDim2.new(1, -ks - 3, 0.5, -ks / 2) or UDim2.new(0, 3, 0.5, -ks / 2)
-		local pc = v and T.Current.Accent or T.Current.Stroke
-		local kc = v and T.Current.Background or T.Current.Text
-		if instant then
-			knob.Position = kp
-			pill.BackgroundColor3 = pc
-			knob.BackgroundColor3 = kc
-		else
-			U.Tween(knob, 0.18, { Position = kp, BackgroundColor3 = kc })
-			U.Tween(pill, 0.18, { BackgroundColor3 = pc })
-		end
-	end
+	T.Register(label, { TextColor3 = cfg.Risky and "RedColor" or "FontColor", Font = "Font" })
 	function flag:SetValue(v)
 		self.Value = v and true or false
-		render(self.Value)
+		check.Visible = self.Value
+		box.UIStroke.Color = self.Value and T.Current.AccentColor or T.Current.OutlineColor
 		self.OnChanged:Fire(self.Value)
 		task.spawn(function() pcall(self.Callback, self.Value) end)
 	end
 	Lib:Connect(row.Activated, function() flag:SetValue(not flag.Value) end)
-	Lib:Connect(T.Changed, function() render(flag.Value, true) end)
-	render(flag.Value, true)
+	Lib:Connect(T.Changed, function() flag:SetValue(flag.Value) end)
+	flag:SetValue(flag.Value)
 	flag.Instance = row
 	return flag
 end

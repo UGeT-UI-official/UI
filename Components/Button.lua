@@ -1,63 +1,46 @@
--- UGeT | Button: (text, fn) or ({Text, Func, Variant, DoubleClick})
 local Button = {}
-
-function Button.Create(Lib, section, textOrCfg, fn)
+function Button.Create(Lib, section, a, b, ...)
 	local U, T = Lib.Utility, Lib.Theme
-	local cfg = type(textOrCfg) == "table" and textOrCfg or { Text = textOrCfg, Func = fn }
-	local obj = { Type = "Button" }
-	local confirming = false
-
-	local btn = U.New("TextButton", { Size = UDim2.new(1, 0, 0, U.IsTouch and 40 or 32),
-		Text = cfg.Text or "Button", TextSize = 13, AutoButtonColor = false,
-		BorderSizePixel = 0, Parent = section.Body },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
-		  U.New("UIStroke", { Thickness = 1 }), U.New("UIScale", { Scale = 1 }) })
-
-	local variant = cfg.Variant
-	if variant == "Accent" then
-		T.Register(btn, { BackgroundColor3 = "Accent", TextColor3 = "Background", Font = "FontBold" })
-		T.Register(btn.UIStroke, { Color = "Accent" })
-	elseif variant == "Danger" then
-		T.Register(btn, { BackgroundColor3 = "Card", TextColor3 = "Danger", Font = "FontBold" })
-		T.Register(btn.UIStroke, { Color = "Danger" })
-	else
-		T.Register(btn, { BackgroundColor3 = "Surface", TextColor3 = "Text", Font = "Font" })
-		T.Register(btn.UIStroke, { Color = "Stroke" })
-	end
-
-	Lib:Connect(btn.MouseEnter, function()
-		U.Tween(btn.UIStroke, 0.12, { Color = T.Current.Accent })
+	local cfg = type(a) == "table" and a or { Text = a, Func = b }
+	local variant = cfg.Variant or "Secondary"
+	local colors = {
+		Primary = { bg = "FontColor", fg = "BackgroundColor", stroke = "FontColor" },
+		Secondary = { bg = "MainColor", fg = "FontColor", stroke = "OutlineColor" },
+		Destructive = { bg = "DestructiveColor", fg = "WhiteColor", stroke = "DestructiveColor" },
+		Ghost = { bg = "BackgroundColor", fg = "FontColor", stroke = "BackgroundColor" },
+		Accent = { bg = "AccentColor", fg = "BackgroundColor", stroke = "AccentColor" },
+		Danger = { bg = "DestructiveColor", fg = "WhiteColor", stroke = "DestructiveColor" },
+	}
+	local c = colors[variant] or colors.Secondary
+	local rowH = U.IsTouch and 36 or 28
+	local row = U.New("TextButton", { Size = UDim2.new(1, 0, 0, rowH), Text = "",
+		AutoButtonColor = false, BorderSizePixel = 0, Parent = section.Body },
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }),
+		  U.New("UIStroke", { Thickness = 1 }),
+		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10) }) })
+	T.Register(row, { BackgroundColor3 = c.bg })
+	T.Register(row.UIStroke, { Color = c.stroke })
+	local label = U.New("TextLabel", { Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
+		Text = cfg.Text or "Button", TextSize = U.IsTouch and 13 or 12, Parent = row })
+	T.Register(label, { TextColor3 = c.fg, Font = "Font" })
+	local armed, lastClick = false, 0
+	Lib:Connect(row.MouseEnter, function()
+		U.Tween(row, 0.1, { BackgroundColor3 = T.Current.AccentColor })
+		U.Tween(label, 0.1, { TextColor3 = T.Current.BackgroundColor })
 	end)
-	Lib:Connect(btn.MouseLeave, function()
-		U.Tween(btn.UIStroke, 0.12, {
-			Color = variant == "Accent" and T.Current.Accent
-				or variant == "Danger" and T.Current.Danger or T.Current.Stroke })
+	Lib:Connect(row.MouseLeave, function()
+		U.Tween(row, 0.1, { BackgroundColor3 = T.Current[c.bg] })
+		U.Tween(label, 0.1, { TextColor3 = T.Current[c.fg] })
 	end)
-	Lib:Connect(btn.Activated, function()
-		btn.UIScale.Scale = 0.97
-		U.Tween(btn.UIScale, 0.15, { Scale = 1 }, Enum.EasingStyle.Back)
-		if cfg.DoubleClick and not confirming then
-			confirming = true
-			btn.Text = "Confirm: " .. (cfg.Text or "Button") .. "?"
-			local old = btn.TextColor3
-			btn.TextColor3 = T.Current.Warning
-			task.delay(3, function()
-				if confirming then
-					confirming = false
-					btn.Text = cfg.Text or "Button"
-					btn.TextColor3 = old
-				end
-			end)
-			return
+	Lib:Connect(row.Activated, function()
+		if cfg.DoubleClick then
+			local now = tick()
+			if now - lastClick < 0.5 then armed = true else armed = false end
+			lastClick = now
+			if not armed then return end
 		end
-		confirming = false
-		btn.Text = cfg.Text or "Button"
 		task.spawn(function() pcall(cfg.Func or function() end) end)
 	end)
-
-	function obj:SetText(t) cfg.Text = t btn.Text = t end
-	obj.Instance = btn
-	return obj
+	return { Instance = row, SetText = function(_, t) label.Text = t end }
 end
-
 return Button

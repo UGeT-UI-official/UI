@@ -9,28 +9,24 @@ local function buildSection(Lib, column, title, tab)
 	local U, T = Lib.Utility, Lib.Theme
 	local card = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BorderSizePixel = 0, Parent = column },
-		{ U.New("UICorner", { CornerRadius = UDim.new(0, 8) }),
+		{ U.New("UICorner", { CornerRadius = UDim.new(0, 4) }),
 		  U.New("UIStroke", { Thickness = 1 }) })
-	T.Register(card, { BackgroundColor3 = "Surface" })
-	T.Register(card.UIStroke, { Color = "Stroke" })
-	local head = U.New("TextButton", { AutomaticSize = Enum.AutomaticSize.X,
-		Size = UDim2.fromOffset(0, 16), Position = UDim2.fromOffset(10, -8),
-		Text = "  " .. title .. "  ", TextSize = 12, AutoButtonColor = false,
-		BorderSizePixel = 0, Parent = card })
-	T.Register(head, { BackgroundColor3 = "Background", TextColor3 = "SubText", Font = "FontBold" })
+	T.Register(card, { BackgroundColor3 = "BackgroundColor" })
+	T.Register(card.UIStroke, { Color = "OutlineColor" })
+	local head = U.New("TextLabel", { Size = UDim2.new(0, 0, 0, 14),
+		AutomaticSize = Enum.AutomaticSize.X, Position = UDim2.fromOffset(8, -7),
+		Text = "  " .. (title or "Section") .. "  ", TextSize = 11,
+		BorderSizePixel = 0, Parent = card },
+		{ U.New("UIPadding", { PaddingLeft = UDim.new(0, 4), PaddingRight = UDim.new(0, 4) }) })
+	T.Register(head, { BackgroundColor3 = "BackgroundColor", TextColor3 = "FontColor", Font = "FontBold" })
 	local body = U.New("Frame", { Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = card }, {
-		U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10),
-			PaddingTop = UDim.new(0, 12), PaddingBottom = UDim.new(0, 10) }),
-		U.New("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
+		U.New("UIPadding", { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8),
+			PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 8) }),
+		U.New("UIListLayout", { Padding = UDim.new(0, 5), SortOrder = Enum.SortOrder.LayoutOrder }),
 	})
 	local section = { Frame = card, Body = body, Title = title, Header = head,
 		Tab = tab, Flags = {}, Collapsed = false }
-	function section:SetCollapsed(v)
-		self.Collapsed = v and true or false
-		body.Visible = not self.Collapsed
-	end
-	Lib:Connect(head.Activated, function() section:SetCollapsed(not section.Collapsed) end)
 	function section:SetEnabled(v)
 		for _, f in ipairs(self.Flags) do if f.SetEnabled then f:SetEnabled(v) end end
 	end
@@ -40,17 +36,17 @@ local function buildSection(Lib, column, title, tab)
 		end
 	end
 	function section:AddLabel(text, wrapped)
-		local l = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, wrapped and 0 or 18),
+		local l = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, wrapped and 0 or 16),
 			AutomaticSize = wrapped and Enum.AutomaticSize.Y or Enum.AutomaticSize.None,
 			BackgroundTransparency = 1, Text = text, TextSize = 12, TextWrapped = wrapped or false,
 			TextXAlignment = Enum.TextXAlignment.Left, Parent = body })
-		T.Register(l, { TextColor3 = "SubText", Font = "Font" })
+		T.Register(l, { TextColor3 = "FontColor", Font = "Font" })
 		return { Instance = l, SetText = function(_, t) l.Text = t end }
 	end
 	function section:AddParagraph(heading, text)
-		local h = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 16), BackgroundTransparency = 1,
+		local h = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 14), BackgroundTransparency = 1,
 			Text = heading, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = body })
-		T.Register(h, { TextColor3 = "Text", Font = "FontBold" })
+		T.Register(h, { TextColor3 = "FontColor", Font = "FontBold" })
 		local p = U.New("TextLabel", { Size = UDim2.new(1, 0, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Text = text,
 			TextSize = 11, TextWrapped = true, TextXAlignment = Enum.TextXAlignment.Left, Parent = body })
@@ -58,11 +54,11 @@ local function buildSection(Lib, column, title, tab)
 		return { SetText = function(_, t) p.Text = t end }
 	end
 	function section:AddDivider()
-		local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, 5),
+		local row = U.New("Frame", { Size = UDim2.new(1, 0, 0, 6),
 			BackgroundTransparency = 1, Parent = body })
 		local l = U.New("Frame", { Size = UDim2.new(1, 0, 0, 1),
 			Position = UDim2.new(0, 0, 0.5, 0), BorderSizePixel = 0, Parent = row })
-		T.Register(l, { BackgroundColor3 = "StrokeSoft" })
+		T.Register(l, { BackgroundColor3 = "OutlineColor" })
 	end
 	return section
 end
@@ -75,26 +71,26 @@ function Tab.Create(Lib, window, name)
 		Visible = false, Parent = window.Pages },
 		{ U.New("UIScale", { Scale = 1 }),
 		  U.New("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10),
-			PaddingTop = UDim.new(0, 12), PaddingBottom = UDim.new(0, 10) }) })
-	T.Register(page, { ScrollBarImageColor3 = "Accent" })
+			PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10) }) })
+	T.Register(page, { ScrollBarImageColor3 = "AccentColor" })
 	self.Page = page
 	local holder = U.New("Frame", { Size = UDim2.new(1, -6, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = page },
 		{ U.New("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal,
-			Padding = UDim.new(0, 10), SortOrder = Enum.SortOrder.LayoutOrder }) })
+			Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }) })
 	self.Holder = holder
 	local function column(order)
-		return U.New("Frame", { Size = UDim2.new(0.5, -5, 0, 0),
+		return U.New("Frame", { Size = UDim2.new(0.5, -4, 0, 0),
 			AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1,
 			LayoutOrder = order, Parent = holder },
-			{ U.New("UIListLayout", { Padding = UDim.new(0, 12), SortOrder = Enum.SortOrder.LayoutOrder }) })
+			{ U.New("UIListLayout", { Padding = UDim.new(0, 10), SortOrder = Enum.SortOrder.LayoutOrder }) })
 	end
 	self.Left = column(1)
 	self.Right = column(2)
 	function self:ApplyLayout(compact)
 		holder.UIListLayout.FillDirection = compact
 			and Enum.FillDirection.Vertical or Enum.FillDirection.Horizontal
-		local size = compact and UDim2.new(1, 0, 0, 0) or UDim2.new(0.5, -5, 0, 0)
+		local size = compact and UDim2.new(1, 0, 0, 0) or UDim2.new(0.5, -4, 0, 0)
 		self.Left.Size = size
 		self.Right.Size = size
 	end
