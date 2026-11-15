@@ -1,11 +1,11 @@
--- UGeT UI | window: sidebar layout, drag, resize, minimize, status bar
+-- UGeT UI | window: sidebar layout, drag, resize, minimize, pin/lock, status bar
 local Window = {}
 local UIS = game:GetService("UserInputService")
 
 function Window.Create(Lib, cfg)
 	local U = Lib.Utility
 	local T = Lib.Theme
-	local self = { Tabs = [], ActiveTab = nil, Minimized = false, Destroyed = false }
+	local self = { Tabs = {}, ActiveTab = nil, Minimized = false, Destroyed = false }
 	local maid = U.Maid()
 	self._maid = maid
 
@@ -29,19 +29,19 @@ function Window.Create(Lib, cfg)
 	self.Frame = main
 	U.Tween(main.UIScale, 0.28, { Scale = 1 }, Enum.EasingStyle.Back)
 
-	-- header
 	local header = U.New("Frame", { Size = UDim2.new(1, 0, 0, 44),
 		BackgroundTransparency = 1, Parent = main })
+	self.Header = header
 	local logo = U.New("Frame", { Size = UDim2.fromOffset(10, 10),
 		Position = UDim2.new(0, 14, 0.5, -5), BorderSizePixel = 0, Parent = header },
 		{ U.New("UICorner", { CornerRadius = UDim.new(0, 3) }) })
 	T.Register(logo, { BackgroundColor3 = "Accent" })
-	local title = U.New("TextLabel", { Size = UDim2.new(1, -160, 0, 20),
+	local title = U.New("TextLabel", { Size = UDim2.new(1, -190, 0, 20),
 		Position = UDim2.fromOffset(32, 6), BackgroundTransparency = 1,
 		Text = cfg.Title or "UGeT UI", TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = header })
 	T.Register(title, { TextColor3 = "Text", Font = "FontBold" })
-	local subtitle = U.New("TextLabel", { Size = UDim2.new(1, -160, 0, 14),
+	local subtitle = U.New("TextLabel", { Size = UDim2.new(1, -190, 0, 14),
 		Position = UDim2.fromOffset(32, 25), BackgroundTransparency = 1,
 		Text = cfg.Subtitle or "", TextSize = 10, TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = header })
@@ -61,12 +61,12 @@ function Window.Create(Lib, cfg)
 		draw(b)
 		return b
 	end
-	local function line(parent, w2, h2, pos, rot)
+	local function line(parent, w2, h2, pos, rot, colorKey)
 		local f = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
 			Size = UDim2.fromOffset(w2, h2), Position = pos, Rotation = rot or 0,
 			BorderSizePixel = 0, Parent = parent },
 			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }) })
-		T.Register(f, { BackgroundColor3 = "SubText" })
+		T.Register(f, { BackgroundColor3 = colorKey or "SubText" })
 		return f
 	end
 
@@ -77,8 +77,16 @@ function Window.Create(Lib, cfg)
 	local minBtn = iconButton(-46, function(b)
 		line(b, 12, 1.6, UDim2.fromScale(0.5, 0.5), 0)
 	end)
+	local pinBtn = iconButton(-82, function(b) end)
+	local pinHead = U.New("Frame", { AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.42), Size = UDim2.fromOffset(9, 9),
+		BackgroundTransparency = 1, BorderSizePixel = 0, Parent = pinBtn },
+		{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
+		  U.New("UIStroke", { Thickness = 1.6 }) })
+	T.Register(pinHead.UIStroke, { Color = "SubText" })
+	local pinNeedle = line(pinBtn, 1.6, 7, UDim2.fromScale(0.5, 0.68), 0)
+	self.PinParts = { Head = pinHead.UIStroke, Needle = pinNeedle }
 
-	-- sidebar
 	local sidebar = U.New("Frame", { Size = UDim2.new(0, 170, 1, -68),
 		Position = UDim2.fromOffset(0, 44), BorderSizePixel = 0, Parent = main }, {
 		U.New("UIPadding", { PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8),
@@ -88,13 +96,11 @@ function Window.Create(Lib, cfg)
 	T.Register(sidebar, { BackgroundColor3 = "Background" })
 	self.Sidebar = sidebar
 
-	-- pages holder
 	local pages = U.New("Frame", { Size = UDim2.new(1, -170, 1, -68),
 		Position = UDim2.fromOffset(170, 44), BackgroundTransparency = 1,
 		ClipsDescendants = true, Parent = main })
 	self.Pages = pages
 
-	-- status bar
 	local status = U.New("Frame", { Size = UDim2.new(1, 0, 0, 24),
 		Position = UDim2.new(0, 0, 1, -24), BorderSizePixel = 0, Parent = main })
 	T.Register(status, { BackgroundColor3 = "Background" })
@@ -114,12 +120,12 @@ function Window.Create(Lib, cfg)
 		fpsAcc = fpsAcc + dt; fpsFrames = fpsFrames + 1; timer = timer + dt
 		if timer >= 0.5 then
 			local fps = math.floor(fpsFrames / math.max(fpsAcc, 1e-9) + 0.5)
-			statusRight.Text = fps .. " fps  •  " .. (self.ActiveTab and self.ActiveTab.Name or "")
+			local lockTag = Lib.Locked and "  [locked]" or ""
+			statusRight.Text = fps .. " fps  -  " .. (self.ActiveTab and self.ActiveTab.Name or "") .. lockTag
 			fpsAcc, fpsFrames, timer = 0, 0, 0
 		end
 	end))
 
-	-- responsive sidebar
 	local function applyLayout()
 		local compact = Lib.Layout.Compact
 		local sw = compact and 52 or 170
@@ -133,7 +139,6 @@ function Window.Create(Lib, cfg)
 	end
 	maid:Give(Lib.Layout.Changed:Connect(applyLayout))
 
-	-- tab switching
 	function self:SwitchTab(tab)
 		for _, t in ipairs(self.Tabs) do
 			local on = t == tab
@@ -181,7 +186,6 @@ function Window.Create(Lib, cfg)
 		return tab
 	end
 
-	-- window controls
 	maid:Give(minBtn.Activated:Connect(function()
 		self.Minimized = not self.Minimized
 		sidebar.Visible = not self.Minimized
@@ -189,15 +193,27 @@ function Window.Create(Lib, cfg)
 		status.Visible = not self.Minimized
 		main.Size = self.Minimized and UDim2.new(0, main.AbsoluteSize.X, 0, 44) or self.NormalSize
 	end))
+
+	function self:SetLocked(v)
+		Lib.Locked = v and true or false
+		local col = Lib.Locked and T.Current.Accent or T.Current.SubText
+		self.PinParts.Head.Color = col
+		self.PinParts.Needle.BackgroundColor3 = col
+		U.Tween(pinBtn, 0.15, { BackgroundTransparency = Lib.Locked and 0 or 1 })
+	end
+	maid:Give(pinBtn.Activated:Connect(function()
+		self:SetLocked(not Lib.Locked)
+		Lib:Notify({ Text = Lib.Locked and "UI locked (drag/resize off)" or "UI unlocked", Type = "info", Time = 2 })
+	end))
+
 	local armed = false
 	maid:Give(closeBtn.Activated:Connect(function()
 		if armed then Lib:Destroy() return end
 		armed = true
-		Lib:Notify({ Title = "UGeT UI", Text = "もう一度 × で閉じます", Type = "warn", Time = 3 })
+		Lib:Notify({ Title = "UGeT UI", Text = "Press X again to close", Type = "warn", Time = 3 })
 		task.delay(3, function() armed = false end)
 	end))
 
-	-- drag + clamp
 	U.Draggable(Lib, main, header, function()
 		local v = workspace.CurrentCamera.ViewportSize
 		local half = main.AbsoluteSize / 2
@@ -206,9 +222,8 @@ function Window.Create(Lib, cfg)
 			math.clamp(p.X.Offset, half.X - v.X * p.X.Scale + 4, v.X * (1 - p.X.Scale) - half.X - 4),
 			p.Y.Scale,
 			math.clamp(p.Y.Offset, half.Y - v.Y * p.Y.Scale + 4, v.Y * (1 - p.Y.Scale) - half.Y - 4))
-	end)
+	end, true)
 
-	-- resize
 	local grip = U.New("TextButton", { AnchorPoint = Vector2.new(1, 1),
 		Position = UDim2.new(1, -3, 1, -3), Size = UDim2.fromOffset(20, 20),
 		Text = "", BackgroundTransparency = 1, AutoButtonColor = false, ZIndex = 5, Parent = main })
@@ -216,6 +231,7 @@ function Window.Create(Lib, cfg)
 	line(grip, 11, 1.4, UDim2.new(1, -7, 1, -7), -45)
 	local resizing, startSize, startInput = false, nil, nil
 	maid:Give(grip.InputBegan:Connect(function(input)
+		if Lib.Locked then return end
 		if input.UserInputType == Enum.UserInputType.MouseButton1
 			or input.UserInputType == Enum.UserInputType.Touch then
 			resizing = true startSize = main.AbsoluteSize startInput = input.Position
@@ -226,7 +242,7 @@ function Window.Create(Lib, cfg)
 			or input.UserInputType == Enum.UserInputType.Touch then resizing = false end
 	end))
 	maid:Give(UIS.InputChanged:Connect(function(input)
-		if not resizing then return end
+		if not resizing or Lib.Locked then return end
 		if input.UserInputType ~= Enum.UserInputType.MouseMovement
 			and input.UserInputType ~= Enum.UserInputType.Touch then return end
 		local v = workspace.CurrentCamera.ViewportSize
@@ -238,21 +254,6 @@ function Window.Create(Lib, cfg)
 		self.Minimized = false
 		sidebar.Visible = true pages.Visible = true status.Visible = true
 	end))
-
-	-- mobile pill
-	if U.IsTouch then
-		local pill = U.New("TextButton", { Position = UDim2.new(1, -86, 0, 14),
-			Size = UDim2.fromOffset(72, 32), Text = "UGeT", TextSize = 13,
-			AutoButtonColor = false, BorderSizePixel = 0, ZIndex = 6, Parent = Lib.ScreenGui },
-			{ U.New("UICorner", { CornerRadius = UDim.new(1, 0) }),
-			  U.New("UIStroke", { Thickness = 1 }) })
-		T.Register(pill, { BackgroundColor3 = "Surface", TextColor3 = "Accent", Font = "FontBold" })
-		T.Register(pill.UIStroke, { Color = "Accent" })
-		U.Draggable(Lib, pill, pill)
-		maid:Give(pill.Activated:Connect(function() Lib:Toggle() end))
-		maid:Give(pill)
-		self.Pill = pill
-	end
 
 	function self:SetVisible(v)
 		main.Visible = v

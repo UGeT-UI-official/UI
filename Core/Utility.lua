@@ -1,14 +1,12 @@
--- compat: Luau table helpers (no-op on Roblox)
+-- UGeT UI | helpers (plain-Lua compatible)
 if not table.clear then function table.clear(t) for k in pairs(t) do t[k] = nil end end end
 if not table.clone then function table.clone(t) local c = {} for k, v in pairs(t) do c[k] = v end return c end end
 if not table.find then function table.find(t, v) for i, x in ipairs(t) do if x == v then return i end end return nil end end
--- UGeT UI | pure helpers, zero dependencies on other modules
-local Utility = {}
 
+local Utility = {}
 local TweenService = game:GetService("TweenService")
 local TextService = game:GetService("TextService")
 local UIS = game:GetService("UserInputService")
-
 Utility.IsTouch = UIS.TouchEnabled
 
 function Utility.New(class, props, children)
@@ -45,7 +43,6 @@ function Utility.FromHex(s)
 	return Color3.fromRGB(bit32.rshift(n, 16) % 256, bit32.rshift(n, 8) % 256, n % 256)
 end
 
--- accepts 12345 / "12345" / "rbxassetid://12345" / catalog URLs
 function Utility.AssetId(v)
 	if type(v) == "number" then return "rbxassetid://" .. math.floor(v) end
 	if type(v) ~= "string" then return nil end
@@ -56,20 +53,31 @@ end
 
 function Utility.Clipboard(text)
 	local fn = setclipboard or toclipboard or (Clipboard and Clipboard.set)
-	if fn then
-		local ok = pcall(fn, tostring(text))
-		return ok
-	end
+	if fn then local ok = pcall(fn, tostring(text)) return ok end
 	return false
 end
 
 function Utility.Request(opts)
 	local req = (syn and syn.request) or (http and http.request)
 		or http_request or request or (fluxus and fluxus.request)
-	if req then
-		local ok, res = pcall(req, opts)
-		if ok then return true, res end
+	if req then local ok, res = pcall(req, opts) if ok then return true, res end end
+	return false
+end
+
+function Utility.OpenUrl(Lib, url)
+	local opener = openbrowser or open_browser or (syn and syn.open_browser)
+		or (browser and browser.open)
+	if opener then
+		local ok = pcall(opener, url)
+		if ok then return true end
 	end
+	if Utility.Clipboard(url) then
+		if Lib and Lib.Notify then
+			Lib:Notify({ Text = "URL copied - open it in your browser", Type = "info", Time = 5 })
+		end
+		return true
+	end
+	if Lib and Lib.Notify then Lib:Notify({ Text = url, Type = "info", Time = 8 }) end
 	return false
 end
 
@@ -96,8 +104,7 @@ function Utility.Checker(parent, w, h, cell)
 	end
 end
 
--- normalized drag tracking: cb(xRatio, yRatio) clamped 0..1, touch + mouse
-function Utility.TrackDrag(Lib, area, cb)
+function Utility.TrackDrag(Lib, area, cb, lockable)
 	local dragging = false
 	local function apply(p)
 		local x = math.clamp((p.X - area.AbsolutePosition.X) / math.max(area.AbsoluteSize.X, 1), 0, 1)
@@ -105,6 +112,7 @@ function Utility.TrackDrag(Lib, area, cb)
 		cb(x, y)
 	end
 	Lib:Connect(area.InputBegan, function(input)
+		if lockable and Lib.Locked then return end
 		if input.UserInputType == Enum.UserInputType.MouseButton1
 			or input.UserInputType == Enum.UserInputType.Touch then
 			dragging = true
@@ -118,16 +126,17 @@ function Utility.TrackDrag(Lib, area, cb)
 		end
 	end)
 	Lib:Connect(UIS.InputChanged, function(input)
-		if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
-			or input.UserInputType == Enum.UserInputType.Touch) then
-			apply(input.Position)
-		end
+		if not dragging then return end
+		if input.UserInputType ~= Enum.UserInputType.MouseMovement
+			and input.UserInputType ~= Enum.UserInputType.Touch then return end
+		apply(input.Position)
 	end)
 end
 
-function Utility.Draggable(Lib, frame, handle, clampFn)
+function Utility.Draggable(Lib, frame, handle, clampFn, lockable)
 	local dragging, startPos, startInput = false, nil, nil
 	Lib:Connect(handle.InputBegan, function(input)
+		if lockable and Lib.Locked then return end
 		if input.UserInputType == Enum.UserInputType.MouseButton1
 			or input.UserInputType == Enum.UserInputType.Touch then
 			dragging = true
@@ -152,7 +161,6 @@ function Utility.Draggable(Lib, frame, handle, clampFn)
 	end)
 end
 
--- Signal (no BindableEvent)
 local Signal = {}
 Signal.__index = Signal
 function Utility.Signal()
@@ -173,7 +181,6 @@ function Signal:DisconnectAll()
 	table.clear(self._handlers)
 end
 
--- Maid
 local Maid = {}
 Maid.__index = Maid
 function Utility.Maid()
@@ -197,7 +204,6 @@ function Maid:Clean()
 	table.clear(self._tasks)
 end
 
--- base flag object; components extend SetValue
 function Utility.Flag(Lib, name, ftype, value)
 	local flag = { Type = ftype, Value = value, OnChanged = Utility.Signal() }
 	function flag:GetValue() return self.Value end

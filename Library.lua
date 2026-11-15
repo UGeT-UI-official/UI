@@ -1,11 +1,6 @@
---[[
-	UGeT UI — original Roblox Luau UI library
-	by FOX & Wase
-	Inspired by Obsidian's philosophy, engineered independently.
-]]
-
+-- UGeT UI | original Roblox Luau UI library (plain-Lua compatible)
 local Library = {
-	Version = "1.0.0",
+	Version = "1.1.0",
 	Name = "UGeT UI",
 	Flags = {},
 	Windows = {},
@@ -13,6 +8,7 @@ local Library = {
 	ToggleKey = "RightControl",
 	Capturing = nil,
 	Unloaded = false,
+	Locked = false,
 	_Init = false,
 	_Modules = nil,
 	_OnDestroy = {},
@@ -65,6 +61,10 @@ function Library.Init()
 	M.Notifications.Init(Library)
 	M.ThemeManager.Init(Library)
 	M.SaveManager.Init(Library)
+	if M.Controls then M.Controls.Init(Library) end
+	if M.MusicPlayer then M.MusicPlayer.Init(Library) end
+	if M.Animator3D then M.Animator3D.Init(Library) end
+	if M.Guide then M.Guide.Init(Library) end
 
 	Library:Connect(UIS.InputBegan, function(input, gpe)
 		if Library.Capturing then
@@ -111,10 +111,8 @@ function Library:CreateWindow(cfg)
 end
 
 function Library:GetFlag(name) return self.Flags[name] end
-
-function Library:SetToggleKey(key)
-	self.ToggleKey = key or "RightControl"
-end
+function Library:SetToggleKey(key) self.ToggleKey = key or "RightControl" end
+function Library:OpenUrl(url) return self.Utility.OpenUrl(self, url) end
 
 function Library:Toggle()
 	self.Toggled = not self.Toggled
@@ -123,16 +121,13 @@ function Library:Toggle()
 	end
 end
 
--- HTTP bridge: executor request -> game:HttpGet -> HttpService (Studio)
 function Library:Fetch(url, opts)
 	opts = opts or {}
 	local ok, res = self.Utility.Request({
 		Url = url, Method = opts.Method or "GET",
 		Headers = opts.Headers, Body = opts.Body,
 	})
-	if ok and res then
-		return true, res.Body or res.StatusCode or res
-	end
+	if ok and res then return true, res.Body or res.StatusCode or res end
 	local ok2, body = pcall(function() return game:HttpGet(url) end)
 	if ok2 then return true, body end
 	local ok3, body3 = pcall(function() return HttpService:GetAsync(url) end)
@@ -153,7 +148,6 @@ function Library:Destroy()
 	table.clear(self._OnDestroy)
 end
 
--- Studio / ModuleScript tree: auto-wire via require.
 local ok, isTree = pcall(function()
 	return script and script:IsA("ModuleScript") and script:FindFirstChild("Core") ~= nil
 end)
@@ -175,9 +169,13 @@ if ok and isTree then
 		Video = require(script.Components.Video),
 		Viewport = require(script.Components.Viewport),
 		Web = require(script.Components.Web),
+		MusicPlayer = require(script.Components.MusicPlayer),
+		Animator3D = require(script.Components.Animator3D),
 		Notifications = require(script.Addons.Notifications),
 		ThemeManager = require(script.Addons.ThemeManager),
 		SaveManager = require(script.Addons.SaveManager),
+		Guide = require(script.Addons.Guide),
+		Controls = require(script.Addons.Controls),
 	})
 	Library.Init()
 end
